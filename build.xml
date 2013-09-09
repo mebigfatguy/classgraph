@@ -1,0 +1,68 @@
+<project name="classgraph" default="jar" basedir="." xmlns:yank="antlib:com.mebigfatguy.yank">
+	
+	<property file="user.properties" />
+    <property file="build.properties" />
+    <property file="version.properties" />
+	
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="classes.dir" value="${basedir}/classes" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="javac.source" value="1.7" />
+	<property name="javac.target" value="1.7" />
+	<property name="javac.deprecation" value="on" />
+	<property name="javac.debug" value="on" />
+	<property name="proxy.server" value="" />
+	<property name="classgraph.version" value="0.1.0" />
+
+	<path id="classgraph.classpath">
+		<pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
+		<pathelement location="${lib.dir}/slf4j-api-${slf4j-api.version}.jar"/>
+		<pathelement location="${lib.dir}/logback-core-${logback-core.version}.jar"/>
+		<pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
+	</path>
+
+	<target name="yank">
+		<mkdir dir="${lib.dir}"/>
+		<yank:yank yankFile="${basedir}/yank.xls" destination="${lib.dir}" proxyServer="${proxy.server}" source="true">
+			<server url="http://repo1.maven.org/maven2"/>
+			<generateVersions propertyFileName="${basedir}/version.properties" />
+		</yank:yank>
+	</target>
+		
+	<target name="init" depends="yank">
+		<mkdir dir="${classes.dir}"/>
+	</target>
+		
+	<target name="clean">
+		<delete dir="${classes.dir}"/>
+		<delete file="${basedir}/classgraph-${classgraph.version}.jar" />
+		<delete file="${basedir}/classgraph-${classgraph.version}-sources.jar" />
+	</target>
+		
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" source="${javac.source}" target="${javac.target}" deprecation="${javac.deprecation}" debug="${javac.debug}" includeantruntime="false">
+			<classpath refid="classgraph.classpath" />
+		</javac>
+	</target>
+	
+	<target name="jar" depends="init,compile">
+		<jar destfile="${basedir}/classgraph-${classgraph.version}.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class" />
+			</fileset>
+			<manifest>
+				<attribute name="classgraph-version" value="${classgraph.version}" />
+				<attribute name="Main-Class" value="com.mebigfatguy.classgraph.ClassGraph" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="classgraph" />
+				<attribute name="Bundle-SymbolicName" value="classgraph; singleton:=true" />
+				<attribute name="Bundle-Version" value="${classgraph.version}" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Bundle-Vendor" value="ClassGraph Project" />
+				<attribute name="Bundle-ActivationPolicy" value="lazy" />
+				<attribute name="Export-Package" value="com.mebigfatguy.classgraph" />
+			</manifest>
+		</jar>
+	</target>
+	
+</project>
