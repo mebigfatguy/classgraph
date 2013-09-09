@@ -92,16 +92,7 @@ public class LengthLimitedInputStream extends InputStream {
 	}
 
 	@Override
-	public synchronized void mark(int readlimit) {
-	}
-
-	@Override
 	public synchronized void reset() throws IOException {
 		throw new IOException("Mark not supported by LengthLimitedInputStream");
-	}
-
-	@Override
-	public boolean markSupported() {
-		return false;
 	}
 }
