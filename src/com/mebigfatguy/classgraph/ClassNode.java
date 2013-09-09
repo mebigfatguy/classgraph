@@ -26,7 +26,7 @@ public class ClassNode {
 	private String packageName;
 	private String clsName;
 
-	private ConcurrentHashMap<String, Integer> relationships;
+	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
 	public ClassNode(String fqcn) {	
 		int dotPos = fqcn.lastIndexOf('.');
