@@ -25,6 +25,7 @@ import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.AnimatorBase;
 
 public class GraphDisplay {
 
@@ -47,14 +48,14 @@ public class GraphDisplay {
         glWindow.setSize(800, 600);
         
         animator = new Animator();
-        animator.setModeBits(false, Animator.MODE_EXPECT_AWT_RENDERING_THREAD);
+        animator.setModeBits(false, AnimatorBase.MODE_EXPECT_AWT_RENDERING_THREAD);
         animator.setExclusiveContext(false);
         
         animator.add(glWindow);
         animator.start();
         
         glWindow.setVisible(true);
-        animator.setUpdateFPSFrames(60, null);
+        animator.setUpdateFPSFrames(15, null);
     }
     
     public void terminate() {
