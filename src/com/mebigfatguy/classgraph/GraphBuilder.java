@@ -22,9 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
@@ -36,33 +36,41 @@ public class GraphBuilder {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(GraphBuilder.class);
 	
+	private ExecutorService executor;
 	private Set<File> classPath;
 	private ClassNodes nodes = new ClassNodes();
 	
 	public GraphBuilder(Set<File> clsPath) {
+	    executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
 		classPath = clsPath;
 	}
 	
 	public void build() {
-		for (File f : classPath) {
-			parseJar(f);
+		for (final File f : classPath) {
+		    executor.submit(new Runnable() {
+		        public void run() {
+		            parseJar(f);
+		        }
+		    });
 		}
+	}
+	
+	public ClassNodes getNodes() {
+	    return nodes;
 	}
 	
 	private void parseJar(File f) {
 		ZipEntry ze = null;
 		try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
-
 			while ((ze = jis.getNextEntry()) != null) {
-				if (ze.getName().endsWith(".class")) {
-					try (InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
-						ClassReader cr = new ClassReader(is);
-						cr.accept(new ClassGraphBuildingVisitor(nodes), ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
-						
+			    final String clsName = ze.getName();
+				if (clsName.endsWith(".class")) {
+					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
+                        ClassReader cr = new ClassReader(is);
+                        cr.accept(new ClassGraphBuildingVisitor(nodes), ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
 					}
 				}
 			}
-			
 		} catch (IOException e) {
 			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
 		}

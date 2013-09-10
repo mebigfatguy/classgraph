@@ -18,7 +18,6 @@
 package com.mebigfatguy.classgraph;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,5 +49,8 @@ public class ClassGraph {
 			builder = new GraphBuilder(clsPath);
 			builder.build();
 		}
+		
+		GraphDisplay gd = new GraphDisplay(builder.getNodes());
+		gd.display();
 	}
 }

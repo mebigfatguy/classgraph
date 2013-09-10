@@ -18,7 +18,10 @@
 		<pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
 		<pathelement location="${lib.dir}/slf4j-api-${slf4j-api.version}.jar"/>
 		<pathelement location="${lib.dir}/logback-core-${logback-core.version}.jar"/>
-		<pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
+        <pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}.jar"/>
+        <pathelement location="${lib.dir}/gluegen-${gluegen.version}.jar"/>
+        <pathelement location="${lib.dir}/gluegen-${gluegen.version}.jar"/>
 	</path>
 
 	<target name="yank">
@@ -27,6 +30,7 @@
 			<server url="http://repo1.maven.org/maven2"/>
 			<generateVersions propertyFileName="${basedir}/version.properties" />
 		</yank:yank>
+		<copy file="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-i586.jar" tofile="${lib.dir}/gluegen-${gluegen-rt.version}-natives-linux-i586.jar"/>
 	</target>
 		
 	<target name="init" depends="yank">
