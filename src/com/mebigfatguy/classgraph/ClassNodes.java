@@ -17,10 +17,12 @@
  */
 package com.mebigfatguy.classgraph;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ClassNodes {
+public class ClassNodes implements Iterable<ClassNode> {
 
     private Map<String, ClassNode> nodes = new ConcurrentHashMap<>();
     
@@ -36,5 +38,10 @@ public class ClassNodes {
             nodes.put(clsName1,  node);
         }
         node.addRelationship(clsName2);
+    }
+
+    @Override
+    public Iterator<ClassNode> iterator() {
+        return nodes.values().iterator();
     }
 }

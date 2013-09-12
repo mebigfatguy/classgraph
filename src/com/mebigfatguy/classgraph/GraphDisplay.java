@@ -17,12 +17,21 @@
  */
 package com.mebigfatguy.classgraph;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
@@ -47,6 +56,14 @@ public class GraphDisplay {
         glWindow.setTitle("ClassGraph");
         glWindow.setSize(800, 600);
         
+        glWindow.addGLEventListener(new GDEvents());
+        glWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowDestroyed(WindowEvent arg0) {
+                System.exit(0);
+            }
+        });
+        
         animator = new Animator();
         animator.setModeBits(false, AnimatorBase.MODE_EXPECT_AWT_RENDERING_THREAD);
         animator.setExclusiveContext(false);
@@ -61,5 +78,76 @@ public class GraphDisplay {
     public void terminate() {
         animator.stop();
         glWindow.destroy();
+    }
+    
+    public void updateNodes() {
+        
+    }
+    
+    class GDEvents implements GLEventListener {
+
+        private static final float RADIUS = 6.378f;
+        private static final int SLICES = 16;
+        private static final int STACKS = 16;
+        
+        private GLU glu;
+        private int sphereList;
+        
+        
+        @Override
+        public void display(GLAutoDrawable drawable) {
+            updateNodes();
+            GL2 gl = drawable.getGL().getGL2();
+            
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+            for (ClassNode node : classNodes) {
+                
+                float[] color = node.getColor();
+                gl.glColor3f(color[0], color[1], color[2]);
+                gl.glPushMatrix();
+                gl.glCallList(sphereList);
+                gl.glPopMatrix();
+                
+            }
+        }
+
+        @Override
+        public void dispose(GLAutoDrawable drawable) {
+        }
+
+        @Override
+        public void init(GLAutoDrawable drawable) {
+            glu = new GLU();
+            
+            GL2 gl = drawable.getGL().getGL2();
+            sphereList = gl.glGenLists(1);
+            gl.glNewList(sphereList, GL2.GL_COMPILE);
+            
+            GLUquadric nodeGraphic = glu.gluNewQuadric();
+            glu.gluQuadricDrawStyle(nodeGraphic, GLU.GLU_FILL);
+            glu.gluQuadricNormals(nodeGraphic, GLU.GLU_SMOOTH);
+            glu.gluQuadricOrientation(nodeGraphic, GLU.GLU_OUTSIDE);
+
+            glu.gluSphere(nodeGraphic, RADIUS, SLICES, STACKS);
+            glu.gluDeleteQuadric(nodeGraphic);
+            gl.glEndList();
+     
+        }
+
+        @Override
+        public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+            GL2 gl = drawable.getGL().getGL2();
+            gl.glViewport(0, 0, width, height);
+            
+            gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+            gl.glLoadIdentity();
+            
+            float widthHeightRatio = (float) drawable.getWidth() / (float) drawable.getHeight();
+            glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+            glu.gluLookAt(0, 0, 1000, 0, 0, 0, 0, 1, 0);
+
+            gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+            gl.glLoadIdentity();
+        }  
     }
 }

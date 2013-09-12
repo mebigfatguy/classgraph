@@ -23,8 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassNode {
 
+    private static final float[] APPLICATION_COLOR = { 0.0f, 1.0f, 0.0f };
+    private static final float[] SYSTEM_COLOR = { 1.0f, 0.0f, 0.0f };
+    
 	private String packageName;
 	private String clsName;
+	private float[] color;
 
 	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
@@ -37,6 +41,11 @@ public class ClassNode {
 			packageName = "";
 			clsName = fqcn;
 		}
+		
+		if (packageName.startsWith("java.") || packageName.startsWith("javax."))
+		    color = SYSTEM_COLOR;
+		else
+		    color = APPLICATION_COLOR;
 	}
 	
 	public void addRelationship(String clsName) {
@@ -63,6 +72,10 @@ public class ClassNode {
 	
 	public String getFQCN() {
 		return packageName.length() > 0 ? packageName + '.' + clsName : clsName;
+	}
+	
+	public float[] getColor() {
+	    return color;
 	}
 	
 	public boolean equals(Object o) {
