@@ -154,7 +154,7 @@ public class GraphDisplay {
             
             float widthHeightRatio = (float) drawable.getWidth() / (float) drawable.getHeight();
             glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-            glu.gluLookAt(0, 0, 1000, 0, 0, 0, 0, 1, 0);
+            glu.gluLookAt(0, 0, 500, 0, 0, 0, 0, 1, 0);
 
             gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
             gl.glLoadIdentity();
