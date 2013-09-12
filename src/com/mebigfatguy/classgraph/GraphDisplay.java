@@ -36,6 +36,8 @@ import javax.media.opengl.glu.GLUquadric;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
@@ -47,6 +49,7 @@ public class GraphDisplay {
     private ClassNodes classNodes;
     private Animator animator;
     private GLWindow glWindow;
+    private float[] eyeLocation = { 0, 0, 500 };
     
     public GraphDisplay(ClassNodes nodes) {
         classNodes = nodes;
@@ -63,6 +66,7 @@ public class GraphDisplay {
         glWindow.setSize(800, 600);
         
         glWindow.addGLEventListener(new GDEvents());
+        glWindow.addKeyListener(new GDKeyListener());
         glWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowDestroyed(WindowEvent arg0) {
@@ -122,7 +126,6 @@ public class GraphDisplay {
         
         private GLU glu;
         private int sphereList;
-        
         
         @Override
         public void display(GLAutoDrawable drawable) {
@@ -193,10 +196,49 @@ public class GraphDisplay {
             
             float widthHeightRatio = (float) drawable.getWidth() / (float) drawable.getHeight();
             glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-            glu.gluLookAt(0, 0, 500, 0, 0, 0, 0, 1, 0);
+            glu.gluLookAt(eyeLocation[0], eyeLocation[1], eyeLocation[2], 0, 0, 0, 0, 1, 0);
 
             gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
             gl.glLoadIdentity();
         }  
+    }
+    
+    class GDKeyListener implements KeyListener {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+            GL2 gl = glWindow.getGL().getGL2();
+            gl.getContext().makeCurrent();
+            
+            try {
+            
+                gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+                gl.glLoadIdentity();
+                
+                int keyCode = e.getKeyCode();
+                if ((keyCode == KeyEvent.VK_UP)) {
+                    eyeLocation[0] *= 0.95f;
+                    eyeLocation[1] *= 0.95f;
+                    eyeLocation[2] *= 0.95f;
+                } else if (keyCode == KeyEvent.VK_DOWN) {
+                    eyeLocation[0] *= 1.05f;
+                    eyeLocation[1] *= 1.05f;
+                    eyeLocation[2] *= 1.05f;
+                }
+                GLU glu = new GLU();
+                float widthHeightRatio = (float) glWindow.getWidth() / (float) glWindow.getHeight();
+                glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+                glu.gluLookAt(eyeLocation[0], eyeLocation[1], eyeLocation[2], 0, 0, 0, 0, 1, 0);
+                
+                gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+            } finally {
+                gl.getContext().release();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+        }
     }
 }
