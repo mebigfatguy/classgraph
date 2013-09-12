@@ -103,6 +103,10 @@ public class GraphBuilder {
 
         @Override
         public ClassType classStatus(String clsName) {
+            if (clsName.startsWith("java.") || clsName.startsWith("javax.")) {
+                return ClassType.SYSTEM_CLASS;
+            }
+            
             String clsResourceName = "/" + clsName.replaceAll("\\.",  "/") + ".class";
             URL u = Thread.currentThread().getContextClassLoader().getResource(clsResourceName);
             if (u != null) {

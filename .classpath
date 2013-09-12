@@ -7,10 +7,16 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/asm-debug-all-4.1.jar" sourcepath="lib/asm-debug-all-4.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/gluegen-2.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-linux-i586.jar"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-linux-i586.jar"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/gluegen-2.0.2-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-windows-i586.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
