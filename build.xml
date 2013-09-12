@@ -15,12 +15,23 @@
 	<property name="classgraph.version" value="0.1.0" />
 
 	<path id="classgraph.classpath">
-		<pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
 		<pathelement location="${lib.dir}/slf4j-api-${slf4j-api.version}.jar"/>
 		<pathelement location="${lib.dir}/logback-core-${logback-core.version}.jar"/>
         <pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}.jar"/>
-        <pathelement location="${lib.dir}/gluegen-${gluegen.version}.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-linux-amd64.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-linux-i586.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-macosx-universal.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-windows-amd64.jar"/>
+        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-windows-i586.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-amd64.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-i586.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-macosx-universal.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-windows-amd64.jar"/>
+        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-windows-i586.jar"/>
 	</path>
 
 	<target name="yank">
@@ -66,6 +77,12 @@
 				<attribute name="Export-Package" value="com.mebigfatguy.classgraph" />
 			</manifest>
 		</jar>
+	</target>
+	
+	<target name="run" depends="jar">
+		<java classname="com.mebigfatguy.classgraph.ClassGraph" fork="true" classpathref="classgraph.classpath">
+			  <arg value="${basedir}/classgraph-${classgraph.version}.jar"/>
+		</java>
 	</target>
 	
 </project>
