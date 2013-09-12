@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ch.qos.logback.core.util.Loader;
-
 public class ClassNodes implements Iterable<ClassNode> {
 
     private ClassFinder clsFinder;

@@ -94,7 +94,6 @@ public class GraphBuilder {
 	        List<URL> urls = new ArrayList<URL>(clsPath.size());
 	        
 	        for (File path : clsPath) {
-	            URL u = path.toURI().toURL();
 	            urls.add(path.toURI().toURL());
 	        }
 	        
