@@ -22,6 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,9 +43,12 @@ public class GraphBuilder {
 	
 	private ExecutorService executor;
 	private Set<File> classPath;
-	private ClassNodes nodes = new ClassNodes();
+	private ClassNodes nodes;
 	
-	public GraphBuilder(Set<File> clsPath) {
+	public GraphBuilder(Set<File> clsPath) throws MalformedURLException {
+        
+	    nodes = new ClassNodes(new ClassFinderLoader(clsPath));
+	    
 	    executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
 		classPath = clsPath;
 	}
@@ -74,5 +82,39 @@ public class GraphBuilder {
 		} catch (IOException e) {
 			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
 		}
+	}
+	
+	private static class ClassFinderLoader extends URLClassLoader implements ClassFinder {
+	    
+	    public ClassFinderLoader(Set<File> clsPath) throws MalformedURLException {
+	        super(toURLs(clsPath));
+	    }
+	    
+	    private static URL[] toURLs(Set<File> clsPath) throws MalformedURLException {
+	        List<URL> urls = new ArrayList<URL>(clsPath.size());
+	        
+	        for (File path : clsPath) {
+	            URL u = path.toURI().toURL();
+	            urls.add(path.toURI().toURL());
+	        }
+	        
+	        return urls.toArray(new URL[urls.size()]);
+	    }
+
+        @Override
+        public ClassType classStatus(String clsName) {
+            String clsResourceName = "/" + clsName.replaceAll("\\.",  "/") + ".class";
+            URL u = Thread.currentThread().getContextClassLoader().getResource(clsResourceName);
+            if (u != null) {
+                return ClassType.SYSTEM_CLASS;
+            }
+            
+            u = getResource(clsResourceName);
+            if (u != null) {
+                return ClassType.PRIMARY_CLASS;
+            }
+            
+            return ClassType.UNKNOWN_CLASS;
+        }
 	}
 }

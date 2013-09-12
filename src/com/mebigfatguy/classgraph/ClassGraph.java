@@ -18,6 +18,7 @@
 package com.mebigfatguy.classgraph;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class ClassGraph {
 	
 	private static GraphBuilder builder;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws MalformedURLException {
 		
 		Set<File> clsPath = new HashSet<>();
 		

@@ -25,15 +25,16 @@ public class ClassNode {
 
     private static final float[] APPLICATION_COLOR = { 0.0f, 1.0f, 0.0f };
     private static final float[] SYSTEM_COLOR = { 1.0f, 0.0f, 0.0f };
+    private static final float[] THIRDPARTY_COLOR = { 0.0f, 0.0f, 1.0f };
     
 	private String packageName;
 	private String clsName;
-	private float[] color;
+	private ClassFinder.ClassType clsType;
 	private float[] position = { 0.0f, 0.0f, 0.0f };
 
 	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
-	public ClassNode(String fqcn) {	
+	public ClassNode(String fqcn, ClassFinder.ClassType classType) {	
 		int dotPos = fqcn.lastIndexOf('.');
 		if (dotPos >= 0) {
 			packageName = fqcn.substring(0, dotPos);
@@ -43,10 +44,7 @@ public class ClassNode {
 			clsName = fqcn;
 		}
 		
-		if (packageName.startsWith("java.") || packageName.startsWith("javax."))
-		    color = SYSTEM_COLOR;
-		else
-		    color = APPLICATION_COLOR;
+		clsType = classType;
 	}
 	
 	public void addRelationship(String clsName) {
@@ -76,7 +74,14 @@ public class ClassNode {
 	}
 	
 	public float[] getColor() {
-	    return color;
+	    switch (clsType) {
+	    case PRIMARY_CLASS:
+	        return APPLICATION_COLOR;
+	    case SYSTEM_CLASS:
+	        return SYSTEM_COLOR;
+	    default:
+	        return THIRDPARTY_COLOR;
+	    }
 	}
 
 	public float[] getPosition() {
