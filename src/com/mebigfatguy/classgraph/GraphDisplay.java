@@ -17,6 +17,11 @@
  */
 package com.mebigfatguy.classgraph;
 
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -63,6 +68,7 @@ public class GraphDisplay {
                 System.exit(0);
             }
         });
+        centerWindow(glWindow);
         
         animator = new Animator();
         animator.setModeBits(false, AnimatorBase.MODE_EXPECT_AWT_RENDERING_THREAD);
@@ -80,7 +86,7 @@ public class GraphDisplay {
         glWindow.destroy();
     }
     
-    public void updateNodes() {
+    private void updateNodes() {
         for (ClassNode node : classNodes) {
             float[] pos = node.getPosition();
             
@@ -88,6 +94,18 @@ public class GraphDisplay {
             pos[1] += ((Math.random() * 2) - 1);
             pos[2] += ((Math.random() * 2) - 1);
         }
+    }
+    
+    private void centerWindow(GLWindow window) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        Rectangle screenBounds = gc.getBounds();
+        
+        int w = window.getWidth();
+        int h = window.getHeight();
+        
+        window.setPosition((screenBounds.width - w) / 2, ((screenBounds.height - h) / 3));
     }
     
     class GDEvents implements GLEventListener {
