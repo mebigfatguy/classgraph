@@ -29,6 +29,7 @@ public class ClassNode {
 	private String packageName;
 	private String clsName;
 	private float[] color;
+	private float[] position = { 0.0f, 0.0f, 0.0f };
 
 	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
@@ -50,7 +51,7 @@ public class ClassNode {
 	
 	public void addRelationship(String clsName) {
 		Integer count = relationships.get(clsName);
-		if (count == 0) {
+		if (count == null) {
 			count = Integer.valueOf(1);
 		} else {
 			count = Integer.valueOf(count.intValue() + 1);
@@ -77,8 +78,12 @@ public class ClassNode {
 	public float[] getColor() {
 	    return color;
 	}
-	
-	public boolean equals(Object o) {
+
+	public float[] getPosition() {
+        return position;
+    }
+
+    public boolean equals(Object o) {
 		if (o == this) return true;
 	
 		if (!(o instanceof ClassNode)) {

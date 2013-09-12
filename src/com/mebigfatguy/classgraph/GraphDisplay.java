@@ -81,7 +81,13 @@ public class GraphDisplay {
     }
     
     public void updateNodes() {
-        
+        for (ClassNode node : classNodes) {
+            float[] pos = node.getPosition();
+            
+            pos[0] += ((Math.random() * 2) - 1);
+            pos[1] += ((Math.random() * 2) - 1);
+            pos[2] += ((Math.random() * 2) - 1);
+        }
     }
     
     class GDEvents implements GLEventListener {
@@ -103,11 +109,15 @@ public class GraphDisplay {
             for (ClassNode node : classNodes) {
                 
                 float[] color = node.getColor();
-                gl.glColor3f(color[0], color[1], color[2]);
+                gl.glColor3f(color[0], color[1], color[2]);  
                 gl.glPushMatrix();
-                gl.glCallList(sphereList);
-                gl.glPopMatrix();
-                
+                try {
+                    float[] pos = node.getPosition();
+                    gl.glTranslatef(pos[0], pos[1], pos[2]);
+                    gl.glCallList(sphereList);
+                } finally {
+                    gl.glPopMatrix();
+                }
             }
         }
 
