@@ -21,7 +21,6 @@
         <pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}.jar"/>
         <pathelement location="${lib.dir}/gluegen-${gluegen.version}.jar"/>
-        <pathelement location="${lib.dir}/gluegen-${gluegen.version}.jar"/>
 	</path>
 
 	<target name="yank">
