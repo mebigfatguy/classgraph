@@ -40,7 +40,6 @@
 			<server url="http://repo1.maven.org/maven2"/>
 			<generateVersions propertyFileName="${basedir}/version.properties" />
 		</yank:yank>
-		<copy file="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-i586.jar" tofile="${lib.dir}/gluegen-${gluegen-rt.version}-natives-linux-i586.jar"/>
 	</target>
 		
 	<target name="init" depends="yank">
