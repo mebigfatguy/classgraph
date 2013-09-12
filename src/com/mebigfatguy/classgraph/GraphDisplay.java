@@ -46,6 +46,15 @@ import com.jogamp.opengl.util.AnimatorBase;
 
 public class GraphDisplay {
 
+    private static final float RADIUS = 6.378f;
+    private static final int SLICES = 16;
+    private static final int STACKS = 16;
+    
+    private static final float[] AMBIENT = { 0.7f, 0.7f, 0.7f, 1 };
+    private static final float[] SPECULAR = { 0.5f, 0.5f, 0.5f, 1 };
+    private static final float[] DIFFUSE = { 1, 1, 1, 1 };
+    private static final float[] LIGHT_POSITION = { 0,3000,2000,1 };
+    
     private ClassNodes classNodes;
     private Animator animator;
     private GLWindow glWindow;
@@ -114,16 +123,7 @@ public class GraphDisplay {
     }
     
     class GDEvents implements GLEventListener {
-
-        private static final float RADIUS = 6.378f;
-        private static final int SLICES = 16;
-        private static final int STACKS = 16;
-        
-        private final float[] ambient = { 0.7f, 0.7f, 0.7f, 1 };
-        private final float[] specular = { 0.5f, 0.5f, 0.5f, 1 };
-        private final float[] diffuse = { 1, 1, 1, 1 };
-        private final float[] lightPos = { 0,3000,2000,1 };
-        
+ 
         private GLU glu;
         private int sphereList;
         
@@ -162,15 +162,13 @@ public class GraphDisplay {
             
             GL2 gl = drawable.getGL().getGL2();
             
-
-            
             gl.glEnable( GLLightingFunc.GL_LIGHTING );
             gl.glEnable( GLLightingFunc.GL_LIGHT0 );
             
-            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, ambient, 0);
-            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, specular, 0);
-            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, diffuse, 0);
-            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, AMBIENT, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, SPECULAR, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, DIFFUSE, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, LIGHT_POSITION, 0);
             
             sphereList = gl.glGenLists(1);
             gl.glNewList(sphereList, GL2.GL_COMPILE);
