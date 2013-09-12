@@ -28,6 +28,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
@@ -114,6 +115,11 @@ public class GraphDisplay {
         private static final int SLICES = 16;
         private static final int STACKS = 16;
         
+        private final float[] ambient = { 0.7f, 0.7f, 0.7f, 1 };
+        private final float[] specular = { 0.5f, 0.5f, 0.5f, 1 };
+        private final float[] diffuse = { 1, 1, 1, 1 };
+        private final float[] lightPos = { 0,3000,2000,1 };
+        
         private GLU glu;
         private int sphereList;
         
@@ -127,6 +133,10 @@ public class GraphDisplay {
             for (ClassNode node : classNodes) {
                 
                 float[] color = node.getColor();
+                gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT, color, 0);
+                gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_SPECULAR, color, 0);
+                gl.glMaterialf(GL.GL_FRONT, GLLightingFunc.GL_SHININESS, 0.5f);
+                
                 gl.glColor3f(color[0], color[1], color[2]);  
                 gl.glPushMatrix();
                 try {
@@ -148,6 +158,17 @@ public class GraphDisplay {
             glu = new GLU();
             
             GL2 gl = drawable.getGL().getGL2();
+            
+
+            
+            gl.glEnable( GLLightingFunc.GL_LIGHTING );
+            gl.glEnable( GLLightingFunc.GL_LIGHT0 );
+            
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, ambient, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR, specular, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, diffuse, 0);
+            gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, lightPos, 0);
+            
             sphereList = gl.glGenLists(1);
             gl.glNewList(sphereList, GL2.GL_COMPILE);
             
