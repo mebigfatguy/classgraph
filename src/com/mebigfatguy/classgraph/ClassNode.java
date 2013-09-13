@@ -23,23 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassNode {
     
-	private String packageName;
-	private String clsName;
+	private String fqcn;
 	private ClassType clsType;
 	private float[] position = { 0.0f, 0.0f, 0.0f };
 
 	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
-	public ClassNode(String fqcn, ClassType classType) {	
-		int dotPos = fqcn.lastIndexOf('.');
-		if (dotPos >= 0) {
-			packageName = fqcn.substring(0, dotPos);
-			clsName = fqcn.substring(dotPos+1);
-		} else {
-			packageName = "";
-			clsName = fqcn;
-		}
-		
+	public ClassNode(String className, ClassType classType) {	
+	    fqcn = className;
 		clsType = classType;
 	}
 	
@@ -56,17 +47,10 @@ public class ClassNode {
 	public Map<String, Integer> getRelationships() {
 		return Collections.unmodifiableMap(relationships);
 	}
-	
-	public String getPackageName() {
-		return packageName;
-	}
-	
-	public String getClsName() {
-		return clsName;
-	}
+
 	
 	public String getFQCN() {
-		return packageName.length() > 0 ? packageName + '.' + clsName : clsName;
+		return fqcn;
 	}
 	
 	public float[] getColor() {
@@ -87,16 +71,16 @@ public class ClassNode {
 		
 		ClassNode that = (ClassNode) o;
 		
-		return packageName.equals(that.getPackageName()) && clsName.equals(that.getClsName());
+		return fqcn.equals(that.fqcn);
 	}
 	
     @Override
 	public int hashCode() {
-		return (packageName.hashCode() * 17) ^ clsName.hashCode();
+		return fqcn.hashCode();
 	}
 	
 	@Override
 	public String toString() {
-	    return getFQCN();
+	    return fqcn;
 	}
 }
