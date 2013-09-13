@@ -74,8 +74,6 @@ public class GraphBuilder {
 		    
 			while ((ze = jis.getNextEntry()) != null) {
 			    final String clsName = ze.getName();
-			    if (clsName.contains("ClassEnvy$1"))
-			        System.out.println("booya");
 				if (clsName.endsWith(".class")) {
 				    LOGGER.info("Parsing class {}", clsName);
 					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
