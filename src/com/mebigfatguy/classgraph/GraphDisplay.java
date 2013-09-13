@@ -176,7 +176,7 @@ public class GraphDisplay {
         float[] pos2 = node2.getPosition();
         
         float distanceSq = distanceSquared(pos1, pos2);
-        return (distanceSq < ATTRACTION_DISTANCE_SQUARED);
+        return (distanceSq > ATTRACTION_DISTANCE_SQUARED);
     }
     
     private void repel(ClassNode node1, ClassNode node2) {
