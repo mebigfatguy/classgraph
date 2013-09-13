@@ -261,6 +261,7 @@ public class GraphDisplay {
                 gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_AMBIENT, color, 0);
                 gl.glMaterialfv(GL.GL_FRONT, GLLightingFunc.GL_SPECULAR, color, 0);
                 gl.glMaterialf(GL.GL_FRONT, GLLightingFunc.GL_SHININESS, 0.5f);
+                gl.glMaterialf(GL.GL_FRONT,  GLLightingFunc.GL_EMISSION,  node.getType() == ClassType.OBJECT_CLASS ? 1.0f : 0.0f);
                 
                 gl.glColor3f(color[0], color[1], color[2]);  
                 gl.glPushMatrix();

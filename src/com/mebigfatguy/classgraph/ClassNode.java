@@ -53,6 +53,10 @@ public class ClassNode {
 		return fqcn;
 	}
 	
+	public ClassType getType() {
+	    return clsType;
+	}
+	
 	public float[] getColor() {
 	    return clsType.color();
 	}
