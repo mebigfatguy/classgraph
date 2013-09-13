@@ -254,7 +254,7 @@ public class GraphDisplay {
         public void display(GLAutoDrawable drawable) {
             GL2 gl = drawable.getGL().getGL2();
             
-            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
             for (ClassNode node : classNodes) {
                 
                 float[] color = node.getColor();
@@ -283,6 +283,10 @@ public class GraphDisplay {
             glu = new GLU();
             
             GL2 gl = drawable.getGL().getGL2();
+            
+            gl.glEnable(GL.GL_DEPTH_TEST);
+            gl.glDepthFunc(GL.GL_LEQUAL);
+            gl.glShadeModel(GLLightingFunc.GL_SMOOTH);
             
             gl.glEnable( GLLightingFunc.GL_LIGHTING );
             gl.glEnable( GLLightingFunc.GL_LIGHT0 );
