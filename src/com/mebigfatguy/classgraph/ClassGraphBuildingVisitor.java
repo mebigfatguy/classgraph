@@ -56,6 +56,9 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
     @Override
     public void visitInnerClass(String name, String outerName, String innerName, int access) {
         
+        if ((name == null) || (outerName == null))
+            return;
+        
         String outerClsName = outerName.replace("/", ".");
         String innerClsName = name.replace("/", ".");
         
