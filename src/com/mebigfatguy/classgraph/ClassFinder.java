@@ -18,6 +18,8 @@
 package com.mebigfatguy.classgraph;
 
 public interface ClassFinder {
-   
+    
+    enum ClassType {PRIMARY_CLASS, SYSTEM_CLASS, UNKNOWN_CLASS};
+    
     ClassType classStatus(String clsName);
 }

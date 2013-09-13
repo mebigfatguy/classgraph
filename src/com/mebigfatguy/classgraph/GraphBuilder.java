@@ -111,14 +111,14 @@ public class GraphBuilder {
         @Override
         public ClassType classStatus(String clsName) {
             if (clsName.startsWith("java.") || clsName.startsWith("javax.")) {
-                return (clsName.equals("java.lang.Object")) ? ClassType.OBJECT_CLASS : ClassType.SYSTEM_CLASS;
+                return ClassType.SYSTEM_CLASS;
             }
             
             String clsResourceName = clsName.replaceAll("\\.",  "/") + ".class";
             
             URL u = getResource(clsResourceName);
             if (u != null) {
-                return ClassType.APPLICATION_CLASS;
+                return ClassType.PRIMARY_CLASS;
             }
             
             return ClassType.UNKNOWN_CLASS;
