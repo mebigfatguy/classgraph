@@ -30,9 +30,28 @@ public class ClassNodes implements Iterable<ClassNode> {
         clsFinder = finder;
     }
     
+    /**
+     * add both nodes to the map, but only put the classes with later
+     * names as dependencies of lasses with earlier names, so we don't
+     * duplicate the relationship.
+     * 
+     * @param clsName1
+     * @param clsName2
+     */
     public void addRelationship(String clsName1, String clsName2) {
-        addNodeToNode(clsName1, clsName2);
-        addNodeToNode(clsName2, clsName1);
+        
+        int cmp = clsName1.compareTo(clsName2);
+        if (cmp == 0) {
+            return;
+        }
+        
+        if (cmp < 0) {
+            addNodeToNode(clsName1, clsName2);
+            addNodeToNode(clsName2, null);
+        } else {
+            addNodeToNode(clsName1, null);
+            addNodeToNode(clsName2, clsName1);
+        }
     }
     
     private void addNodeToNode(String clsName1, String clsName2) {
@@ -42,7 +61,8 @@ public class ClassNodes implements Iterable<ClassNode> {
             node = new ClassNode(clsName1, clsFinder.classStatus(clsName1));
             nodes.put(clsName1,  node);
         }
-        node.addRelationship(clsName2);
+        if (clsName2 != null)
+            node.addRelationship(clsName2);
     }
 
     @Override
