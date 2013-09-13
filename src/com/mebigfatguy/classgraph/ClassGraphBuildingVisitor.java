@@ -57,7 +57,7 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
     public void visitInnerClass(String name, String outerName, String innerName, int access) {
         
         String outerClsName = outerName.replace("/", ".");
-        String innerClsName = outerClsName + "$" + innerName.replace("/", ".");
+        String innerClsName = name.replace("/", ".");
         
         classNodes.addRelationship(outerClsName, innerClsName);
     }
