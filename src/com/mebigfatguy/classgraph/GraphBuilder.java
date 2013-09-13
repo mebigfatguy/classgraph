@@ -70,12 +70,14 @@ public class GraphBuilder {
 	private void parseJar(File f) {
 		ZipEntry ze = null;
 		try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
+		    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
+		    
 			while ((ze = jis.getNextEntry()) != null) {
 			    final String clsName = ze.getName();
 				if (clsName.endsWith(".class")) {
 					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
                         ClassReader cr = new ClassReader(is);
-                        cr.accept(new ClassGraphBuildingVisitor(nodes), ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
+                        cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
 					}
 				}
 			}
