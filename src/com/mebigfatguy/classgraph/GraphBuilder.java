@@ -75,6 +75,7 @@ public class GraphBuilder {
 			while ((ze = jis.getNextEntry()) != null) {
 			    final String clsName = ze.getName();
 				if (clsName.endsWith(".class")) {
+				    LOGGER.info("Parsing class {}", clsName);
 					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
                         ClassReader cr = new ClassReader(is);
                         cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
