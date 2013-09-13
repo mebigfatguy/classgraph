@@ -218,15 +218,15 @@ public class GraphDisplay {
         float denom = (float) Math.sqrt(uv[0] * uv[0] + uv[1] * uv[1] + uv[2] * uv[2]);
         
         if (denom == 0.0f) {
-            uv[0] = 0;
-            uv[1] = 0;
-            uv[2] = 0; 
-            uv[((int) (Math.random() * 3))] = 1.0f;
-        } else {
-            uv[0] /= denom;
-            uv[1] /= denom;
-            uv[2] /= denom;
+            uv[0] = (float) (Math.random() * 10.0 - 5.0);
+            uv[1] = (float) (Math.random() * 10.0 - 5.0);
+            uv[2] = (float) (Math.random() * 10.0 - 5.0);
+            denom = (float) Math.sqrt(uv[0] * uv[0] + uv[1] * uv[1] + uv[2] * uv[2]);
         }
+
+        uv[0] /= denom;
+        uv[1] /= denom;
+        uv[2] /= denom;
         
         return uv;
     }
