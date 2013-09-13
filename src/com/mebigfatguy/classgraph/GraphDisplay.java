@@ -135,7 +135,7 @@ public class GraphDisplay {
             for (int j = i + 1; j < nodes.length; ++j) {
                 ClassNode node2 = nodes[j];
                 
-                if (!(node1.getRelationships().containsKey(node2.getFQCN()) || node2.getRelationships().containsKey(node1.getFQCN()))) {
+                if ((node1.getRelationships().containsKey(node2.getFQCN()) || node2.getRelationships().containsKey(node1.getFQCN()))) {
                     if (isCloseTo(node1, node2, SHORT_REPEL_DISTANCE_SQUARED)) {
                         repel(node1, node2);
                     }                      
