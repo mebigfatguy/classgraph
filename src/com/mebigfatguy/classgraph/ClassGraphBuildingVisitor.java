@@ -47,7 +47,7 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
 	    if (desc.startsWith("L")) {
-    		String fieldClsName = desc.substring(1, desc.length() - 1);
+    		String fieldClsName = desc.substring(1, desc.length() - 1).replace("/",  ".");
             classNodes.addRelationship(clsName, fieldClsName);
 	    }
         return null;
