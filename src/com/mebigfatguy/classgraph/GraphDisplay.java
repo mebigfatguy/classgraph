@@ -51,9 +51,12 @@ public class GraphDisplay {
     private static final int SLICES = 16;
     private static final int STACKS = 16;
     
-    private static final float REPEL_DISTANCE = RADIUS * 12.0f;
-    private static final float REPEL_DISTANCE_SQUARED = REPEL_DISTANCE * REPEL_DISTANCE;
+    private static final float LONG_REPEL_DISTANCE = RADIUS * 12.0f;
+    private static final float LONG_REPEL_DISTANCE_SQUARED = LONG_REPEL_DISTANCE * LONG_REPEL_DISTANCE;
     
+    private static final float SHORT_REPEL_DISTANCE = RADIUS * 8.0f;
+    private static final float SHORT_REPEL_DISTANCE_SQUARED = SHORT_REPEL_DISTANCE * SHORT_REPEL_DISTANCE;
+
     private static final float ATTRACTION_DISTANCE = RADIUS * 6.0f;
     private static final float ATTRACTION_DISTANCE_SQUARED = ATTRACTION_DISTANCE * ATTRACTION_DISTANCE;
     
@@ -132,9 +135,16 @@ public class GraphDisplay {
             for (int j = i + 1; j < nodes.length; ++j) {
                 ClassNode node2 = nodes[j];
                 
-                if (isCloseTo(node1, node2)) {
-                    repel(node1, node2);
+                if (!(node1.getRelationships().containsKey(node2.getFQCN()) || node2.getRelationships().containsKey(node1.getFQCN()))) {
+                    if (isCloseTo(node1, node2, SHORT_REPEL_DISTANCE_SQUARED)) {
+                        repel(node1, node2);
+                    }                      
+                } else {
+                    if (isCloseTo(node1, node2, LONG_REPEL_DISTANCE_SQUARED)) {
+                        repel(node1, node2);
+                    }                    
                 }
+
             }
         } 
     }
@@ -151,12 +161,12 @@ public class GraphDisplay {
         }
     }
     
-    private boolean isCloseTo(ClassNode node1, ClassNode node2) {
+    private boolean isCloseTo(ClassNode node1, ClassNode node2, float distance) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition();
         
         float distanceSq = distanceSquared(pos1, pos2);
-        return (distanceSq < REPEL_DISTANCE_SQUARED);
+        return (distanceSq < distance);
     }
     
     private boolean isFarAwayFrom(ClassNode node1, ClassNode node2) {
