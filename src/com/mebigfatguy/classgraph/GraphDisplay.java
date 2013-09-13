@@ -57,6 +57,7 @@ public class GraphDisplay {
     
     private ClassNodes classNodes;
     private Animator animator;
+    private Thread modifier;
     private GLWindow glWindow;
     private float[] eyeLocation = { 0, 0, 500 };
     
@@ -91,11 +92,21 @@ public class GraphDisplay {
         animator.add(glWindow);
         animator.start();
         
+        modifier = new Thread(new Modifier());
+        modifier.setName("modifier");
+        modifier.start();
+        
         glWindow.setVisible(true);
-        animator.setUpdateFPSFrames(15, null);
+        animator.setUpdateFPSFrames(10, null);
     }
     
     public void terminate() {
+        try {
+            modifier.interrupt();
+            modifier.join();
+        } catch (InterruptedException ie) {
+        }
+        
         animator.stop();
         glWindow.destroy();
     }
@@ -129,7 +140,6 @@ public class GraphDisplay {
         
         @Override
         public void display(GLAutoDrawable drawable) {
-            updateNodes();
             GL2 gl = drawable.getGL().getGL2();
             
             gl.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -237,6 +247,18 @@ public class GraphDisplay {
 
         @Override
         public void keyReleased(KeyEvent e) {
+        }
+    }
+    
+    class Modifier implements Runnable {
+        public void run() {
+            try {         
+                while (!Thread.interrupted()) {
+                    Thread.sleep(500);
+                    updateNodes();
+                }
+            } catch (InterruptedException ie) {
+            }
         }
     }
 }
