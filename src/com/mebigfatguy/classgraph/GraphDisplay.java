@@ -21,6 +21,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.util.Map;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -49,6 +50,12 @@ public class GraphDisplay {
     private static final float RADIUS = 6.378f;
     private static final int SLICES = 16;
     private static final int STACKS = 16;
+    
+    private static final float REPEL_DISTANCE = RADIUS * 1.5f;
+    private static final float REPEL_DISTANCE_SQUARED = REPEL_DISTANCE * REPEL_DISTANCE;
+    
+    private static final float ATTRACTION_DISTANCE = RADIUS * 4.0f;
+    private static final float ATTRACTION_DISTANCE_SQUARED = ATTRACTION_DISTANCE * ATTRACTION_DISTANCE;
     
     private static final float[] AMBIENT = { 0.7f, 0.7f, 0.7f, 1 };
     private static final float[] SPECULAR = { 0.5f, 0.5f, 0.5f, 1 };
@@ -112,13 +119,99 @@ public class GraphDisplay {
     }
     
     private void updateNodes() {
-        for (ClassNode node : classNodes) {
-            float[] pos = node.getPosition();
-            
-            pos[0] += ((Math.random() * 2) - 1);
-            pos[1] += ((Math.random() * 2) - 1);
-            pos[2] += ((Math.random() * 2) - 1);
+        Map<String, ClassNode> nodeMap = classNodes.get();
+        
+        repelNodes(nodeMap);
+        attractNodes(nodeMap);
+    }
+    
+    private void repelNodes(Map<String, ClassNode> nodeMap) {
+        ClassNode[] nodes = nodeMap.values().toArray(new ClassNode[nodeMap.size()]);
+        for (int i = 0; i < nodes.length - 1; ++i) {
+            ClassNode node1 = nodes[i];
+            for (int j = i + 1; j < nodes.length; ++j) {
+                ClassNode node2 = nodes[j];
+                
+                if (isCloseTo(node1, node2)) {
+                    repel(node1, node2);
+                }
+            }
+        } 
+    }
+    
+    private void attractNodes(Map<String, ClassNode> nodeMap) {
+        for (ClassNode node : nodeMap.values()) {
+            for (String attractorName : node.getRelationships().keySet()) {
+                ClassNode attractorNode = nodeMap.get(attractorName);
+                
+                if (isFarAwayFrom(node, attractorNode)) {
+                    attract(node, attractorNode);
+                }
+            }
         }
+    }
+    
+    private boolean isCloseTo(ClassNode node1, ClassNode node2) {
+        float[] pos1 = node1.getPosition();
+        float[] pos2 = node2.getPosition();
+        
+        float distanceSq = distanceSquared(pos1, pos2);
+        return (distanceSq < REPEL_DISTANCE_SQUARED);
+    }
+    
+    private boolean isFarAwayFrom(ClassNode node1, ClassNode node2) {
+        float[] pos1 = node1.getPosition();
+        float[] pos2 = node2.getPosition();
+        
+        float distanceSq = distanceSquared(pos1, pos2);
+        return (distanceSq < ATTRACTION_DISTANCE_SQUARED);
+    }
+    
+    private void repel(ClassNode node1, ClassNode node2) {
+        float[] pos1 = node1.getPosition();
+        float[] pos2 = node2.getPosition(); 
+        
+        float[] uv = unitVector(pos1, pos2);
+        
+        pos1[0] -= uv[0];
+        pos1[1] -= uv[1];
+        pos1[2] -= uv[2];
+        pos2[0] += uv[0];
+        pos2[1] += uv[1];
+        pos2[2] += uv[2];
+    }
+    
+    private void attract(ClassNode node1, ClassNode node2) {
+        float[] pos1 = node1.getPosition();
+        float[] pos2 = node2.getPosition();
+        
+        float[] uv = unitVector(pos1, pos2);
+        
+        pos1[0] += uv[0];
+        pos1[1] += uv[1];
+        pos1[2] += uv[2];
+        pos2[0] -= uv[0];
+        pos2[1] -= uv[1];
+        pos2[2] -= uv[2];
+    }
+    
+    private float distanceSquared(float[] pos1, float[] pos2) {
+        float x = pos1[0] - pos2[0];
+        float y = pos1[1] - pos2[1];
+        float z = pos1[2] - pos2[2];
+        
+        return x * x + y * y + z * z;
+    }
+    
+    private float[] unitVector(float[] pos1, float[] pos2) {
+        float[] uv = { pos2[0] - pos1[0], pos2[1] - pos1[1], pos2[2] - pos1[2] };
+        float denom = (float) Math.sqrt(uv[0] * uv[0] + uv[1] * uv[1] + uv[2] * uv[2]);
+        
+        uv[0] /= denom;
+        uv[1] /= denom;
+        uv[2] /= denom;
+        
+        return uv;
     }
     
     private void centerWindow(GLWindow window) {

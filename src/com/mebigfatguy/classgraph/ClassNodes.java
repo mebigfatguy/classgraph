@@ -65,6 +65,10 @@ public class ClassNodes implements Iterable<ClassNode> {
             node.addRelationship(clsName2);
     }
 
+    Map<String, ClassNode> get() {
+        return nodes;
+    }
+    
     @Override
     public Iterator<ClassNode> iterator() {
         return nodes.values().iterator();

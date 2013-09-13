@@ -88,6 +88,7 @@ public class ClassNode {
         return position;
     }
 
+	@Override
     public boolean equals(Object o) {
 		if (o == this) return true;
 	
@@ -100,7 +101,13 @@ public class ClassNode {
 		return packageName.equals(that.getPackageName()) && clsName.equals(that.getClsName());
 	}
 	
+    @Override
 	public int hashCode() {
 		return (packageName.hashCode() * 17) ^ clsName.hashCode();
+	}
+	
+	@Override
+	public String toString() {
+	    return getFQCN();
 	}
 }
