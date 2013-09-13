@@ -22,19 +22,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassNode {
-
-    private static final float[] APPLICATION_COLOR = { 0.0f, 1.0f, 0.0f };
-    private static final float[] SYSTEM_COLOR = { 1.0f, 0.0f, 0.0f };
-    private static final float[] THIRDPARTY_COLOR = { 0.0f, 0.0f, 1.0f };
     
 	private String packageName;
 	private String clsName;
-	private ClassFinder.ClassType clsType;
+	private ClassType clsType;
 	private float[] position = { 0.0f, 0.0f, 0.0f };
 
 	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
 	
-	public ClassNode(String fqcn, ClassFinder.ClassType classType) {	
+	public ClassNode(String fqcn, ClassType classType) {	
 		int dotPos = fqcn.lastIndexOf('.');
 		if (dotPos >= 0) {
 			packageName = fqcn.substring(0, dotPos);
@@ -74,14 +70,7 @@ public class ClassNode {
 	}
 	
 	public float[] getColor() {
-	    switch (clsType) {
-	    case PRIMARY_CLASS:
-	        return APPLICATION_COLOR;
-	    case SYSTEM_CLASS:
-	        return SYSTEM_COLOR;
-	    default:
-	        return THIRDPARTY_COLOR;
-	    }
+	    return clsType.color();
 	}
 
 	public float[] getPosition() {
