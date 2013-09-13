@@ -6,7 +6,8 @@
 	
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="classes.dir" value="${basedir}/classes" />
-	<property name="lib.dir" value="${basedir}/lib" />
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="conf.dir" value="${basedir}/conf" />
 	<property name="javac.source" value="1.7" />
 	<property name="javac.target" value="1.7" />
 	<property name="javac.deprecation" value="on" />
@@ -16,6 +17,7 @@
 
 	<path id="classgraph.classpath">
         <pathelement location="${classes.dir}"/>
+        <pathelement location="${conf.dir}"/>
         <pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
 		<pathelement location="${lib.dir}/slf4j-api-${slf4j-api.version}.jar"/>
 		<pathelement location="${lib.dir}/logback-core-${logback-core.version}.jar"/>
