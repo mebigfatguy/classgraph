@@ -23,9 +23,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -49,8 +46,6 @@ import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 
 public class GraphDisplay {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphDisplay.class);
     
     private static final float RADIUS = 6.378f;
     private static final int SLICES = 16;
@@ -163,8 +158,6 @@ public class GraphDisplay {
                     if (isFarAwayFrom(node, attractorNode)) {
                         attract(node, attractorNode);
                     }
-                } else {
-                    LOGGER.error("Failed to find node for {}", attractorNode);
                 }
             }
         }
