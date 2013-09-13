@@ -68,23 +68,28 @@ public class GraphBuilder {
 	}
 	
 	private void parseJar(File f) {
-		ZipEntry ze = null;
-		try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
-		    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
-		    
-			while ((ze = jis.getNextEntry()) != null) {
-			    final String clsName = ze.getName();
-				if (clsName.endsWith(".class")) {
-				    LOGGER.info("Parsing class {}", clsName);
-					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
-                        ClassReader cr = new ClassReader(is);
-                        cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
-					}
-				}
-			}
-		} catch (IOException e) {
-			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
-		}
+	    try {
+    		ZipEntry ze = null;
+    		try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
+    		    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
+    		    
+    			while ((ze = jis.getNextEntry()) != null) {
+    			    final String clsName = ze.getName();
+    				if (clsName.endsWith(".class")) {
+    				    LOGGER.info("Parsing class {}", clsName);
+    				    
+    				    Thread.sleep(500);
+    					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
+                            ClassReader cr = new ClassReader(is);
+                            cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
+    					}
+    				}
+    			}
+    		} catch (IOException e) {
+    			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
+    		}
+	    } catch (InterruptedException ie) {  
+	    }
 	}
 	
 	private static class ClassFinderLoader extends URLClassLoader implements ClassFinder {

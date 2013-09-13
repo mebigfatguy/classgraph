@@ -51,10 +51,10 @@ public class GraphDisplay {
     private static final int SLICES = 16;
     private static final int STACKS = 16;
     
-    private static final float REPEL_DISTANCE = RADIUS * 1.5f;
+    private static final float REPEL_DISTANCE = RADIUS * 12.0f;
     private static final float REPEL_DISTANCE_SQUARED = REPEL_DISTANCE * REPEL_DISTANCE;
     
-    private static final float ATTRACTION_DISTANCE = RADIUS * 4.0f;
+    private static final float ATTRACTION_DISTANCE = RADIUS * 6.0f;
     private static final float ATTRACTION_DISTANCE_SQUARED = ATTRACTION_DISTANCE * ATTRACTION_DISTANCE;
     
     private static final float[] AMBIENT = { 0.7f, 0.7f, 0.7f, 1 };
@@ -104,7 +104,7 @@ public class GraphDisplay {
         modifier.start();
         
         glWindow.setVisible(true);
-        animator.setUpdateFPSFrames(10, null);
+        animator.setUpdateFPSFrames(20, null);
     }
     
     public void terminate() {
@@ -207,9 +207,16 @@ public class GraphDisplay {
         float[] uv = { pos2[0] - pos1[0], pos2[1] - pos1[1], pos2[2] - pos1[2] };
         float denom = (float) Math.sqrt(uv[0] * uv[0] + uv[1] * uv[1] + uv[2] * uv[2]);
         
-        uv[0] /= denom;
-        uv[1] /= denom;
-        uv[2] /= denom;
+        if (denom == 0.0f) {
+            uv[0] = 0;
+            uv[1] = 0;
+            uv[2] = 0; 
+            uv[((int) (Math.random() * 3))] = 1.0f;
+        } else {
+            uv[0] /= denom;
+            uv[1] /= denom;
+            uv[2] /= denom;
+        }
         
         return uv;
     }
