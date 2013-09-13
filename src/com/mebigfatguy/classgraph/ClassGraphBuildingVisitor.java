@@ -46,8 +46,10 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
 
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		String fieldClsName = name.replace("/",  ".");
-        classNodes.addRelationship(clsName, fieldClsName);
+	    if (desc.startsWith("L")) {
+    		String fieldClsName = desc.substring(1, desc.length() - 1);
+            classNodes.addRelationship(clsName, fieldClsName);
+	    }
         return null;
 	}
 
@@ -55,7 +57,7 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
     public void visitInnerClass(String name, String outerName, String innerName, int access) {
         
         String outerClsName = outerName.replace("/", ".");
-        String innerClsName = innerName.replace("/", ".");
+        String innerClsName = outerClsName + "$" + innerName.replace("/", ".");
         
         classNodes.addRelationship(outerClsName, innerClsName);
     }
