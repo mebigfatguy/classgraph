@@ -199,12 +199,12 @@ public class GraphDisplay {
         
         float[] uv = unitVector(pos1, pos2);
         
-        pos1[0] += uv[0];
-        pos1[1] += uv[1];
-        pos1[2] += uv[2];
-        pos2[0] -= uv[0];
-        pos2[1] -= uv[1];
-        pos2[2] -= uv[2];
+        pos1[0] += 1.2f * uv[0];
+        pos1[1] += 1.2f * uv[1];
+        pos1[2] += 1.2f * uv[2];
+        pos2[0] -= 1.2f * uv[0];
+        pos2[1] -= 1.2f * uv[1];
+        pos2[2] -= 1.2f * uv[2];
     }
     
     private float distanceSquared(float[] pos1, float[] pos2) {
