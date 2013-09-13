@@ -106,7 +106,7 @@ public class GraphBuilder {
                 return ClassType.SYSTEM_CLASS;
             }
             
-            String clsResourceName = "/" + clsName.replaceAll("\\.",  "/") + ".class";
+            String clsResourceName = clsName.replaceAll("\\.",  "/") + ".class";
             URL u = Thread.currentThread().getContextClassLoader().getResource(clsResourceName);
             if (u != null) {
                 return ClassType.SYSTEM_CLASS;
