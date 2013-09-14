@@ -32,7 +32,7 @@ public class ClassNodes implements Iterable<ClassNode> {
     
     /**
      * add both nodes to the map, but only put the classes with later
-     * names as dependencies of lasses with earlier names, so we don't
+     * names as dependencies of classes with earlier names, so we don't
      * duplicate the relationship.
      * 
      * @param clsName1
@@ -52,6 +52,28 @@ public class ClassNodes implements Iterable<ClassNode> {
             addNodeToNode(clsName1, null);
             addNodeToNode(clsName2, clsName1);
         }
+    }
+    
+    /**
+     * find the attraction count by looking at the earlier name's relationship
+     * map
+     * @param node
+     * @return
+     */
+    public int getAttractionBetween(ClassNode node1, ClassNode node2) {
+        
+        if (node1.getFQCN().compareTo(node2.getFQCN()) > 0) {
+            ClassNode tmp = node1;
+            node1 = node2;
+            node2 = tmp;
+        }
+        
+        Integer attraction = node1.getRelationships().get(node2.getFQCN());
+        if (attraction == null) {
+            return 0;
+        }
+        
+        return attraction.intValue();
     }
     
     private void addNodeToNode(String clsName1, String clsName2) {

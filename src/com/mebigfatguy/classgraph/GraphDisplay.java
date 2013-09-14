@@ -47,6 +47,8 @@ import com.jogamp.opengl.util.AnimatorBase;
 
 public class GraphDisplay {
     
+    private static final Integer ONE = Integer.valueOf(0);
+    
     private static final float RADIUS = 6.378f;
     private static final int SLICES = 16;
     private static final int STACKS = 16;
@@ -148,7 +150,6 @@ public class GraphDisplay {
                         repel(node1, node2);
                     }                    
                 }
-
             }
         } 
     }
@@ -189,26 +190,28 @@ public class GraphDisplay {
         
         float[] uv = unitVector(pos1, pos2);
         
-        pos1[0] -= uv[0];
-        pos1[1] -= uv[1];
-        pos1[2] -= uv[2];
-        pos2[0] += uv[0];
-        pos2[1] += uv[1];
-        pos2[2] += uv[2];
+        for (int i = 0; i < 3; ++i) {
+            pos1[i] += -uv[i];
+            pos2[i] += +uv[i];
+        }
     }
     
     private void attract(ClassNode node1, ClassNode node2) {
-        float[] pos1 = node1.getPosition();
-        float[] pos2 = node2.getPosition();
         
-        float[] uv = unitVector(pos1, pos2);
-        
-        pos1[0] += uv[0];
-        pos1[1] += uv[1];
-        pos1[2] += uv[2];
-        pos2[0] -= uv[0];
-        pos2[1] -= uv[1];
-        pos2[2] -= uv[2];
+        int attraction = classNodes.getAttractionBetween(node1,  node2);
+        if (attraction != 0) {
+            
+            float[] pos1 = node1.getPosition();
+            float[] pos2 = node2.getPosition();
+       
+            float[] uv = unitVector(pos1, pos2);
+            float multipler = (float) attraction;
+            
+            for (int i = 0; i < 3; ++i) {
+                pos1[i] += multipler * uv[i];
+                pos2[i] += -multipler * uv[i];
+            }
+        }
     }
     
     private float distanceSquared(float[] pos1, float[] pos2) {
