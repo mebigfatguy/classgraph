@@ -60,6 +60,10 @@ public class GraphDisplay {
     private static final float ATTRACTION_DISTANCE = RADIUS * 6.0f;
     private static final float ATTRACTION_DISTANCE_SQUARED = ATTRACTION_DISTANCE * ATTRACTION_DISTANCE;
     
+    private static final float[] ORIGIN = {0.0f, 0.0f, 0.0f };
+    private static final float STEP_SIZE = 10.0f;
+    private static final float ROTATION_SIZE = (float) (Math.PI / 180.0f);
+    
     private static final float[] AMBIENT = { 0.7f, 0.7f, 0.7f, 1 };
     private static final float[] SPECULAR = { 0.5f, 0.5f, 0.5f, 1 };
     private static final float[] DIFFUSE = { 1, 1, 1, 1 };
@@ -343,13 +347,27 @@ public class GraphDisplay {
                 
                 int keyCode = e.getKeyCode();
                 if ((keyCode == KeyEvent.VK_UP)) {
-                    eyeLocation[0] *= 0.95f;
-                    eyeLocation[1] *= 0.95f;
-                    eyeLocation[2] *= 0.95f;
+                    float[] uv = unitVector(ORIGIN, eyeLocation);
+                    for (int i = 0; i < 3; ++i) {
+                        uv[i] *= STEP_SIZE;
+                        eyeLocation[i] -= uv[i];
+                    }
                 } else if (keyCode == KeyEvent.VK_DOWN) {
-                    eyeLocation[0] *= 1.05f;
-                    eyeLocation[1] *= 1.05f;
-                    eyeLocation[2] *= 1.05f;
+                    float[] uv = unitVector(ORIGIN, eyeLocation);
+                    for (int i = 0; i < 3; ++i) {
+                        uv[i] *= STEP_SIZE;
+                        eyeLocation[i] += uv[i];
+                    }
+                } else if (keyCode == KeyEvent.VK_LEFT) {
+                    float x = (float) (Math.cos(ROTATION_SIZE) * eyeLocation[0] - Math.sin(ROTATION_SIZE) * eyeLocation[2]);
+                    float z = (float) (Math.sin(ROTATION_SIZE) * eyeLocation[0] + Math.cos(ROTATION_SIZE) * eyeLocation[2]);
+                    eyeLocation[0] = x;
+                    eyeLocation[2] = z;
+                } else if (keyCode == KeyEvent.VK_RIGHT) {
+                    float x = (float) (Math.cos(-ROTATION_SIZE) * eyeLocation[0] - Math.sin(-ROTATION_SIZE) * eyeLocation[2]);
+                    float z = (float) (Math.sin(-ROTATION_SIZE) * eyeLocation[0] + Math.cos(-ROTATION_SIZE) * eyeLocation[2]);
+                    eyeLocation[0] = x;
+                    eyeLocation[2] = z;
                 }
                 GLU glu = new GLU();
                 float widthHeightRatio = (float) glWindow.getWidth() / (float) glWindow.getHeight();
