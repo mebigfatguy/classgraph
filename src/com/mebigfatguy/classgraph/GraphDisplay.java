@@ -51,13 +51,13 @@ public class GraphDisplay {
     private static final int SLICES = 16;
     private static final int STACKS = 16;
     
-    private static final float LONG_REPEL_DISTANCE = RADIUS * 12.0f;
+    private static final float LONG_REPEL_DISTANCE = RADIUS * 8.0f;
     private static final float LONG_REPEL_DISTANCE_SQUARED = LONG_REPEL_DISTANCE * LONG_REPEL_DISTANCE;
     
-    private static final float SHORT_REPEL_DISTANCE = RADIUS * 8.0f;
+    private static final float SHORT_REPEL_DISTANCE = RADIUS * 3.0f;
     private static final float SHORT_REPEL_DISTANCE_SQUARED = SHORT_REPEL_DISTANCE * SHORT_REPEL_DISTANCE;
 
-    private static final float ATTRACTION_DISTANCE = RADIUS * 6.0f;
+    private static final float ATTRACTION_DISTANCE = RADIUS * 4.0f;
     private static final float ATTRACTION_DISTANCE_SQUARED = ATTRACTION_DISTANCE * ATTRACTION_DISTANCE;
     
     private static final float[] ORIGIN = {0.0f, 0.0f, 0.0f };
