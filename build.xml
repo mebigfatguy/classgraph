@@ -18,7 +18,7 @@
 	<path id="classgraph.classpath">
         <pathelement location="${classes.dir}"/>
         <pathelement location="${conf.dir}"/>
-        <pathelement location="${lib.dir}/asm-debug-all-${asm-debug-all.version}.jar"/>
+        <pathelement location="${lib.dir}/asm-${asm.version}.jar"/>
 		<pathelement location="${lib.dir}/slf4j-api-${slf4j-api.version}.jar"/>
 		<pathelement location="${lib.dir}/logback-core-${logback-core.version}.jar"/>
         <pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>

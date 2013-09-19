@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
-	<classpathentry kind="lib" path="lib/asm-debug-all-4.1.jar" sourcepath="lib/asm-debug-all-4.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2.jar" sourcepath="/home/dave/.m2/repository/org/jogamp/jogl/jogl-all/2.0.2/jogl-all-2.0.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-linux-i586.jar"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt-2.0.2-natives-linux-i586.jar"/>
@@ -18,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-macosx-universal.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-windows-amd64.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.0.2-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="lib/asm-4.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
