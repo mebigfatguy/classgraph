@@ -82,7 +82,7 @@ public class GraphDisplay {
     }
     
     public void display() {
-        GLProfile profile = GLProfile.get(GLProfile.GL2ES2);
+        GLProfile profile = GLProfile.getDefault();
         final GLCapabilities caps = new GLCapabilities( profile );
         caps.setBackgroundOpaque(true);
         Display display = NewtFactory.createDisplay(null);
