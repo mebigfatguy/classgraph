@@ -143,12 +143,14 @@ public class GraphDisplay {
                 
                 if ((node1.getRelationships().containsKey(node2.getFQCN()) || node2.getRelationships().containsKey(node1.getFQCN()))) {
                     if (isCloseTo(node1, node2, SHORT_REPEL_DISTANCE_SQUARED)) {
-                        repel(node1, node2);
+                        repel(node1, node2, SHORT_REPEL_DISTANCE / 3);
                     }                      
                 } else {
-                    if (isCloseTo(node1, node2, LONG_REPEL_DISTANCE_SQUARED)) {
-                        repel(node1, node2);
-                    }                    
+                    float distance = getDistanceSquared(node1, node2);
+                    if (distance < LONG_REPEL_DISTANCE_SQUARED) {
+                        float repelDistance = (float) (Math.sqrt(LONG_REPEL_DISTANCE_SQUARED - distance) / 3);
+                        repel(node1, node2, repelDistance);
+                    }                 
                 }
             }
         } 
@@ -168,12 +170,17 @@ public class GraphDisplay {
         }
     }
     
+    
     private boolean isCloseTo(ClassNode node1, ClassNode node2, float distance) {
+        float distanceSq = getDistanceSquared(node1, node2);
+        return (distanceSq < distance);
+    }
+    
+    private float getDistanceSquared(ClassNode node1, ClassNode node2) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition();
         
-        float distanceSq = distanceSquared(pos1, pos2);
-        return (distanceSq < distance);
+        return distanceSquared(pos1, pos2);
     }
     
     private boolean isFarAwayFrom(ClassNode node1, ClassNode node2) {
@@ -184,15 +191,15 @@ public class GraphDisplay {
         return (distanceSq > ATTRACTION_DISTANCE_SQUARED);
     }
     
-    private void repel(ClassNode node1, ClassNode node2) {
+    private void repel(ClassNode node1, ClassNode node2, float repelSpeed) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition(); 
         
         float[] uv = unitVector(pos1, pos2);
         
         for (int i = 0; i < 3; ++i) {
-            pos1[i] += -uv[i];
-            pos2[i] += +uv[i];
+            pos1[i] += -repelSpeed * uv[i];
+            pos2[i] += +repelSpeed * uv[i];
         }
     }
     

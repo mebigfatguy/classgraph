@@ -48,9 +48,9 @@ public class ClassGraph {
 		
 		if (!clsPath.isEmpty()) {
 			builder = new GraphBuilder(clsPath);
-			builder.build();
 		    GraphDisplay gd = new GraphDisplay(builder.getNodes());
 		    gd.display();
+            builder.build();
 		}
 	}
 }
