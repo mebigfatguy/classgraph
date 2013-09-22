@@ -50,8 +50,8 @@ public class GraphDisplay {
     private static final Integer ONE = Integer.valueOf(0);
     
     private static final float RADIUS = 6.378f;
-    private static final int SLICES = 16;
-    private static final int STACKS = 16;
+    private static final int SLICES = 12;
+    private static final int STACKS = 12;
     
     private static final float LONG_REPEL_DISTANCE = RADIUS * 8.0f;
     private static final float LONG_REPEL_DISTANCE_SQUARED = LONG_REPEL_DISTANCE * LONG_REPEL_DISTANCE;
