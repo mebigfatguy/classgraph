@@ -47,8 +47,6 @@ import com.jogamp.opengl.util.AnimatorBase;
 
 public class GraphDisplay {
     
-    private static final Integer ONE = Integer.valueOf(0);
-    
     private static final float RADIUS = 6.378f;
     private static final int SLICES = 12;
     private static final int STACKS = 12;
