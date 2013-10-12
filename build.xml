@@ -68,6 +68,9 @@
 			<manifest>
 				<attribute name="classgraph-version" value="${classgraph.version}" />
 				<attribute name="Main-Class" value="com.mebigfatguy.classgraph.ClassGraph" />
+				<attribute name="Application-Name" value="ClassGraph" />
+				<attribute name="Permissions" value="all-permissions" />
+				<attribute name="Codebase" value="*" />
 				<attribute name="Bundle-ManifestVersion" value="2" />
 				<attribute name="Bundle-Name" value="classgraph" />
 				<attribute name="Bundle-SymbolicName" value="classgraph; singleton:=true" />
