@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -45,9 +47,20 @@ public class GraphBuilder {
 	private Set<File> classPath;
 	private ClassNodes nodes;
 	
-	public GraphBuilder(Set<File> clsPath) throws MalformedURLException {
+	public GraphBuilder(final Set<File> clsPath) {
         
-	    nodes = new ClassNodes(new ClassFinderLoader(clsPath));
+	    ClassFinderLoader loader = AccessController.<ClassFinderLoader>doPrivileged(new PrivilegedAction<ClassFinderLoader>() {
+            @Override
+            public ClassFinderLoader run() {
+                try {
+                    return new ClassFinderLoader(clsPath);
+                } catch (MalformedURLException e) {
+                    throw new IllegalArgumentException("Invalid url " + clsPath, e);
+                }
+            }
+	    });
+	    
+	    nodes = new ClassNodes(loader);
 	    
 	    executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
 		classPath = clsPath;
