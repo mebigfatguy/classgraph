@@ -210,7 +210,7 @@ public class GraphDisplay {
             float[] pos2 = node2.getPosition();
        
             float[] uv = unitVector(pos1, pos2);
-            float multipler = (float) attraction;
+            float multipler = attraction;
             
             for (int i = 0; i < 3; ++i) {
                 pos1[i] += multipler * uv[i];
