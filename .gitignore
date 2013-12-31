@@ -2,3 +2,4 @@ classes
 *.jar
 version.properties
 .~lock.yank.*
+target
