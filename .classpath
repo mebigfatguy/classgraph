@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/logback-classic-1.0.13.jar"/>
-	<classpathentry kind="lib" path="lib/logback-core-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/asm-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt-2.1.3-natives-linux-amd64.jar"/>
@@ -18,5 +16,7 @@
 	<classpathentry kind="lib" path="lib/jogl-all-2.1.3-natives-windows-amd64.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.1.3-natives-windows-i586.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/logback-classic-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/logback-core-1.1.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
