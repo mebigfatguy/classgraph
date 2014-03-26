@@ -87,6 +87,7 @@
 				<attribute name="Bundle-Vendor" value="ClassGraph Project" />
 				<attribute name="Bundle-ActivationPolicy" value="lazy" />
 				<attribute name="Export-Package" value="com.mebigfatguy.classgraph" />
+				<attribute name="Import-Package" value="org.objectweb.asm, org.slf4j, com.jogamp.newt, com.jogamp.opengl.util" />
 			</manifest>
 		</jar>
 	</target>
