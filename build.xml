@@ -5,7 +5,8 @@
     <property file="version.properties" />
 	
 	<property name="src.dir" value="${basedir}/src" />
-	<property name="classes.dir" value="${basedir}/classes" />
+	<property name="target.dir" value="${basedir}/target"/>
+	<property name="classes.dir" value="${target.dir}/classes" />
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="conf.dir" value="${basedir}/conf" />
 	<property name="javac.source" value="1.7" />
@@ -57,9 +58,7 @@
 	</target>
 		
 	<target name="clean">
-		<delete dir="${classes.dir}"/>
-		<delete file="${basedir}/classgraph-${classgraph.version}.jar" />
-		<delete file="${basedir}/classgraph-${classgraph.version}-sources.jar" />
+		<delete dir="${target.dir}"/>
 	</target>
 		
 	<target name="compile" depends="init">
@@ -69,7 +68,7 @@
 	</target>
 	
 	<target name="jar" depends="init,compile">
-		<jar destfile="${basedir}/classgraph-${classgraph.version}.jar">
+		<jar destfile="${target.dir}/classgraph-${classgraph.version}.jar">
 			<fileset dir="${classes.dir}">
 				<include name="**/*.class" />
 			</fileset>
@@ -94,7 +93,7 @@
 	
 	<target name="run" depends="jar">
 		<java classname="com.mebigfatguy.classgraph.ClassGraph" fork="true" classpathref="classgraph.classpath">
-			  <arg value="${basedir}/classgraph-${classgraph.version}.jar"/>
+			  <arg value="${target.dir}/classgraph-${classgraph.version}.jar"/>
 		</java>
 	</target>
 	
