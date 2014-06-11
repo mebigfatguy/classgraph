@@ -19,6 +19,7 @@ package com.mebigfatguy.classgraph;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,17 @@ import org.slf4j.LoggerFactory;
 public class GraphBuilder {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(GraphBuilder.class);
+	
+	private static final FileFilter CLASS_FILTER = new FileFilter() {
+		@Override
+		public boolean accept(File path) {
+			if (path.isDirectory()) {
+				return true;
+			}
+			
+			return path.getPath().endsWith(".class");
+		}
+	};
 	
 	private ExecutorService executor;
 	private Set<File> classPath;
@@ -70,7 +82,10 @@ public class GraphBuilder {
 		for (final File f : classPath) {
 		    executor.submit(new Runnable() {
 		        public void run() {
-		            parseJar(f);
+		        	if (f.isFile())
+		        		parseJar(f);
+		        	else
+		        		parseDirectory(f);
 		        }
 		    });
 		}
@@ -102,6 +117,29 @@ public class GraphBuilder {
     			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
     		}
 	    } catch (InterruptedException ie) {  
+	    }
+	}
+	
+	private void parseDirectory(File d) {
+	    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
+	    List<File> stack = new ArrayList<File>();
+	    stack.add(d);
+	    
+	    while (!stack.isEmpty()) {
+	    	File f = stack.remove(stack.size() - 1);
+			if (f.isDirectory()) {
+				File[] children = f.listFiles(CLASS_FILTER);
+				for (File c : children) {
+					stack.add(c);
+				}
+			} else {
+				try (final InputStream is = new BufferedInputStream(new FileInputStream(f))) {
+                    ClassReader cr = new ClassReader(is);
+                    cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
+	    		} catch (IOException e) {
+	    			LOGGER.error("Failed parsing class file {}", f, e);
+	    		}
+			}
 	    }
 	}
 	

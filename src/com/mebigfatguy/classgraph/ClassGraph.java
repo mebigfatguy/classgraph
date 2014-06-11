@@ -36,7 +36,7 @@ public class ClassGraph {
 		
 		for (String a : args) {
 			File f = new File(a);
-			if (f.isFile())
+			if ((f.isFile() && f.getName().endsWith(".jar")) || f.isDirectory())
 				clsPath.add(f);
 			else {
 				LOGGER.error("Failed loading jar file {}.. ignored", a);
