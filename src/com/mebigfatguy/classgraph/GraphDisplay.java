@@ -132,7 +132,7 @@ public class GraphDisplay {
         attractNodes(nodeMap);
     }
     
-    private void repelNodes(Map<String, ClassNode> nodeMap) {
+    private static void repelNodes(Map<String, ClassNode> nodeMap) {
         ClassNode[] nodes = nodeMap.values().toArray(new ClassNode[nodeMap.size()]);
         for (int i = 0; i < nodes.length - 1; ++i) {
             ClassNode node1 = nodes[i];
@@ -169,19 +169,19 @@ public class GraphDisplay {
     }
     
     
-    private boolean isCloseTo(ClassNode node1, ClassNode node2, float distance) {
+    private static boolean isCloseTo(ClassNode node1, ClassNode node2, float distance) {
         float distanceSq = getDistanceSquared(node1, node2);
         return (distanceSq < distance);
     }
     
-    private float getDistanceSquared(ClassNode node1, ClassNode node2) {
+    private static float getDistanceSquared(ClassNode node1, ClassNode node2) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition();
         
         return distanceSquared(pos1, pos2);
     }
     
-    private boolean isFarAwayFrom(ClassNode node1, ClassNode node2) {
+    private static boolean isFarAwayFrom(ClassNode node1, ClassNode node2) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition();
         
@@ -189,7 +189,7 @@ public class GraphDisplay {
         return (distanceSq > ATTRACTION_DISTANCE_SQUARED);
     }
     
-    private void repel(ClassNode node1, ClassNode node2, float repelSpeed) {
+    private static void repel(ClassNode node1, ClassNode node2, float repelSpeed) {
         float[] pos1 = node1.getPosition();
         float[] pos2 = node2.getPosition(); 
         
@@ -219,7 +219,7 @@ public class GraphDisplay {
         }
     }
     
-    private float distanceSquared(float[] pos1, float[] pos2) {
+    private static float distanceSquared(float[] pos1, float[] pos2) {
         float x = pos1[0] - pos2[0];
         float y = pos1[1] - pos2[1];
         float z = pos1[2] - pos2[2];
@@ -227,7 +227,7 @@ public class GraphDisplay {
         return x * x + y * y + z * z;
     }
     
-    private float[] unitVector(float[] pos1, float[] pos2) {
+    private static float[] unitVector(float[] pos1, float[] pos2) {
         float[] uv = { pos2[0] - pos1[0], pos2[1] - pos1[1], pos2[2] - pos1[2] };
         float denom = (float) Math.sqrt(uv[0] * uv[0] + uv[1] * uv[1] + uv[2] * uv[2]);
         
@@ -245,7 +245,7 @@ public class GraphDisplay {
         return uv;
     }
     
-    private void centerWindow(GLWindow window) {
+    private static void centerWindow(GLWindow window) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         GraphicsConfiguration gc = gd.getDefaultConfiguration();
@@ -394,6 +394,7 @@ public class GraphDisplay {
     }
     
     class Modifier implements Runnable {
+    	@Override
         public void run() {
             try {         
                 while (!Thread.interrupted()) {
