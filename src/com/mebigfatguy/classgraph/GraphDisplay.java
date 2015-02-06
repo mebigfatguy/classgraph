@@ -331,7 +331,7 @@ public class GraphDisplay {
             gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
             gl.glLoadIdentity();
             
-            float widthHeightRatio = (float) drawable.getWidth() / (float) drawable.getHeight();
+            float widthHeightRatio = (float) width / (float) height;
             glu.gluPerspective(45, widthHeightRatio, 1, 1000);
             glu.gluLookAt(eyeLocation[0], eyeLocation[1], eyeLocation[2], 0, 0, 0, 0, 1, 0);
 
