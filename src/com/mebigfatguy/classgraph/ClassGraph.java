@@ -32,6 +32,11 @@ public class ClassGraph {
 	
 	public static void main(String[] args) {
 		
+		if (args.length == 0) {
+			LOGGER.error("No classpath roots specified, no imaging can occur");
+			return;
+		}
+		
 		Set<File> clsPath = new HashSet<>();
 		
 		for (String a : args) {
