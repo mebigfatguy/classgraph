@@ -92,6 +92,10 @@ public class GraphBuilder {
 		}
 	}
 	
+	public void terminate() {
+		executor.shutdownNow();
+	}
+	
 	public ClassNodes getNodes() {
 	    return nodes;
 	}

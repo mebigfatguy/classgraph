@@ -21,6 +21,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.media.opengl.GL;
@@ -74,9 +76,16 @@ public class GraphDisplay {
     private Thread modifier;
     private GLWindow glWindow;
     private float[] eyeLocation = { 0, 0, 500 };
+    private List<TerminationListener> listeners;
+    
     
     public GraphDisplay(ClassNodes nodes) {
         classNodes = nodes;
+        listeners = new ArrayList<TerminationListener>();
+    }
+    
+    public void addTerminationListener(TerminationListener l) {
+    	listeners.add(l);
     }
     
     public void display() {
@@ -94,7 +103,9 @@ public class GraphDisplay {
         glWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowDestroyed(WindowEvent arg0) {
-                System.exit(0);
+                for (TerminationListener l : listeners) {
+                	l.terminated();
+                }
             }
         });
         centerWindow(glWindow);

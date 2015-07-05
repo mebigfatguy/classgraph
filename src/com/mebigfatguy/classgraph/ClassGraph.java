@@ -53,6 +53,15 @@ public class ClassGraph {
 		if (!clsPath.isEmpty()) {
 			builder = new GraphBuilder(clsPath);
 		    GraphDisplay gd = new GraphDisplay(builder.getNodes());
+		    
+		    gd.addTerminationListener(new TerminationListener() {
+		    	@Override
+		    	public void terminated() {
+		    		builder.terminate();
+		    		System.exit(0);
+		    	}
+		    });
+		    
 		    gd.display();
             builder.build();
 		}
