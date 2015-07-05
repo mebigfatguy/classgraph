@@ -39,8 +39,8 @@ import javax.media.opengl.glu.GLUquadric;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
+import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
@@ -130,6 +130,7 @@ public class GraphDisplay {
             modifier.interrupt();
             modifier.join();
         } catch (InterruptedException ie) {
+        	// expected
         }
         
         animator.stop();
@@ -300,6 +301,7 @@ public class GraphDisplay {
 
         @Override
         public void dispose(GLAutoDrawable drawable) {
+        	//do nothing
         }
 
         @Override
@@ -351,7 +353,7 @@ public class GraphDisplay {
         }  
     }
     
-    class GDKeyListener implements KeyListener {
+    class GDKeyListener extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -397,10 +399,6 @@ public class GraphDisplay {
             } finally {
                 gl.getContext().release();
             }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
         }
     }
     
