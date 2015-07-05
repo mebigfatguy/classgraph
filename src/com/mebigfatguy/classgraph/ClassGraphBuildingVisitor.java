@@ -33,13 +33,13 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-	    clsName = name.replace("/",  ".");
-	    String superClsName = superName.replace("/",  ".");
+	    clsName = internalToExternalName(name);
+	    String superClsName = internalToExternalName(superName);
 	    
 	    classNodes.addRelationship(clsName, superClsName);
 	    
 	    for (String inf : interfaces) {
-	        String interfaceClsName = inf.replace("/",  ".");
+	        String interfaceClsName = internalToExternalName(inf);
 	        classNodes.addRelationship(clsName, interfaceClsName);
 	    }
 	}
@@ -47,7 +47,7 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
 	    if (desc.startsWith("L")) {
-    		String fieldClsName = desc.substring(1, desc.length() - 1).replace("/",  ".");
+    		String fieldClsName = internalToExternalName(desc.substring(1, desc.length() - 1));
             classNodes.addRelationship(clsName, fieldClsName);
 	    }
         return null;
@@ -59,9 +59,13 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
         if ((name == null) || (outerName == null))
             return;
         
-        String outerClsName = outerName.replace("/", ".");
-        String innerClsName = name.replace("/", ".");
+        String outerClsName = internalToExternalName(outerName);
+        String innerClsName = internalToExternalName(name);
         
         classNodes.addRelationship(outerClsName, innerClsName);
+    }
+    
+    private static String internalToExternalName(String name) {
+    	return name.replace('/', '.');
     }
 }
