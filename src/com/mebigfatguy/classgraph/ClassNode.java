@@ -22,69 +22,70 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassNode {
-    
+
 	private String fqcn;
 	private ClassType clsType;
 	private float[] position = { 0.0f, 0.0f, 0.0f };
 
-	private Map<String, Integer> relationships = new ConcurrentHashMap<>();
-	
-	public ClassNode(String className, ClassType classType) {	
-	    fqcn = className;
+	private Map<String, Float> relationships = new ConcurrentHashMap<>();
+
+	public ClassNode(String className, ClassType classType) {
+		fqcn = className;
 		clsType = classType;
 	}
-	
-	public void addRelationship(String clsName) {
-		Integer count = relationships.get(clsName);
+
+	public void addRelationship(String clsName, RelationshipType type) {
+		Float count = relationships.get(clsName);
 		if (count == null) {
-			count = Integer.valueOf(1);
+			count = type.getWeight();
 		} else {
-			count = Integer.valueOf(count.intValue() + 1);
+			count = Float.valueOf(count.floatValue() + type.getWeight());
 		}
 		relationships.put(clsName, count);
 	}
-	
-	public Map<String, Integer> getRelationships() {
+
+	public Map<String, Float> getRelationships() {
 		return Collections.unmodifiableMap(relationships);
 	}
 
-	
 	public String getFQCN() {
 		return fqcn;
 	}
-	
+
 	public ClassType getType() {
-	    return clsType;
+		return clsType;
 	}
-	
+
 	public float[] getColor() {
-	    return clsType.color();
+		return clsType.color();
 	}
 
 	public float[] getPosition() {
-        return position;
-    }
+		return position;
+	}
 
 	@Override
-    public boolean equals(Object o) {
-		if (o == this) return true;
-	
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
 		if (!(o instanceof ClassNode)) {
 			return false;
 		}
-		
+
 		ClassNode that = (ClassNode) o;
-		
+
 		return fqcn.equals(that.fqcn);
 	}
-	
-    @Override
+
+	@Override
 	public int hashCode() {
 		return fqcn.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
-	    return fqcn;
+		return fqcn;
 	}
 }

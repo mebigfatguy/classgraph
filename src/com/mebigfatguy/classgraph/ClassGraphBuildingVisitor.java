@@ -23,9 +23,9 @@ import org.objectweb.asm.Opcodes;
 
 public class ClassGraphBuildingVisitor extends ClassVisitor {
 
-    private ClassNodes classNodes;
-    private String clsName;
-    
+	private ClassNodes classNodes;
+	private String clsName;
+
 	public ClassGraphBuildingVisitor(ClassNodes nodes) {
 		super(Opcodes.ASM4);
 		classNodes = nodes;
@@ -33,39 +33,40 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-	    clsName = internalToExternalName(name);
-	    String superClsName = internalToExternalName(superName);
-	    
-	    classNodes.addRelationship(clsName, superClsName);
-	    
-	    for (String inf : interfaces) {
-	        String interfaceClsName = internalToExternalName(inf);
-	        classNodes.addRelationship(clsName, interfaceClsName);
-	    }
+		clsName = internalToExternalName(name);
+		String superClsName = internalToExternalName(superName);
+
+		classNodes.addRelationship(clsName, superClsName, RelationshipType.INHERITANCE);
+
+		for (String inf : interfaces) {
+			String interfaceClsName = internalToExternalName(inf);
+			classNodes.addRelationship(clsName, interfaceClsName, RelationshipType.INTERFACE);
+		}
 	}
 
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-	    if (desc.startsWith("L")) {
-    		String fieldClsName = internalToExternalName(desc.substring(1, desc.length() - 1));
-            classNodes.addRelationship(clsName, fieldClsName);
-	    }
-        return null;
+		if (desc.startsWith("L")) {
+			String fieldClsName = internalToExternalName(desc.substring(1, desc.length() - 1));
+			classNodes.addRelationship(clsName, fieldClsName, RelationshipType.CONTAINMENT);
+		}
+		return null;
 	}
 
-    @Override
-    public void visitInnerClass(String name, String outerName, String innerName, int access) {
-        
-        if ((name == null) || (outerName == null))
-            return;
-        
-        String outerClsName = internalToExternalName(outerName);
-        String innerClsName = internalToExternalName(name);
-        
-        classNodes.addRelationship(outerClsName, innerClsName);
-    }
-    
-    private static String internalToExternalName(String name) {
-    	return name.replace('/', '.');
-    }
+	@Override
+	public void visitInnerClass(String name, String outerName, String innerName, int access) {
+
+		if (name == null || outerName == null) {
+			return;
+		}
+
+		String outerClsName = internalToExternalName(outerName);
+		String innerClsName = internalToExternalName(name);
+
+		classNodes.addRelationship(outerClsName, innerClsName, RelationshipType.INNER);
+	}
+
+	private static String internalToExternalName(String name) {
+		return name.replace('/', '.');
+	}
 }
