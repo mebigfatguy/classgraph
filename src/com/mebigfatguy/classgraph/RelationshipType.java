@@ -18,7 +18,7 @@
 package com.mebigfatguy.classgraph;
 
 public enum RelationshipType {
-	INHERITANCE(4.0f), INTERFACE(3.0f), INNER(2.0f), CONTAINMENT(1.5f), UNKNOWN(1.0f);
+	INHERITANCE(4.0f), INTERFACE(3.0f), INNER(2.0f), CONTAINMENT(1.5f), UNKNOWN(0.0f);
 
 	private float relationshipWeight;
 
