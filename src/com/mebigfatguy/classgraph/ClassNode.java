@@ -23,69 +23,69 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassNode {
 
-	private String fqcn;
-	private ClassType clsType;
-	private float[] position = { 0.0f, 0.0f, 0.0f };
+    private String fqcn;
+    private ClassType clsType;
+    private float[] position = { 0.0f, 0.0f, 0.0f };
 
-	private Map<String, Float> relationships = new ConcurrentHashMap<>();
+    private Map<String, Float> relationships = new ConcurrentHashMap<>();
 
-	public ClassNode(String className, ClassType classType) {
-		fqcn = className;
-		clsType = classType;
-	}
+    public ClassNode(String className, ClassType classType) {
+        fqcn = className;
+        clsType = classType;
+    }
 
-	public void addRelationship(String clsName, RelationshipType type) {
-		Float count = relationships.get(clsName);
-		if (count == null) {
-			count = type.getWeight();
-		} else {
-			count = Float.valueOf(count.floatValue() + type.getWeight());
-		}
-		relationships.put(clsName, count);
-	}
+    public void addRelationship(String clsName, RelationshipType type) {
+        Float count = relationships.get(clsName);
+        if (count == null) {
+            count = Float.valueOf(type.getWeight());
+        } else {
+            count = Float.valueOf(count.floatValue() + type.getWeight());
+        }
+        relationships.put(clsName, count);
+    }
 
-	public Map<String, Float> getRelationships() {
-		return Collections.unmodifiableMap(relationships);
-	}
+    public Map<String, Float> getRelationships() {
+        return Collections.unmodifiableMap(relationships);
+    }
 
-	public String getFQCN() {
-		return fqcn;
-	}
+    public String getFQCN() {
+        return fqcn;
+    }
 
-	public ClassType getType() {
-		return clsType;
-	}
+    public ClassType getType() {
+        return clsType;
+    }
 
-	public float[] getColor() {
-		return clsType.color();
-	}
+    public float[] getColor() {
+        return clsType.color();
+    }
 
-	public float[] getPosition() {
-		return position;
-	}
+    public float[] getPosition() {
+        return position;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
 
-		if (!(o instanceof ClassNode)) {
-			return false;
-		}
+        if (!(o instanceof ClassNode)) {
+            return false;
+        }
 
-		ClassNode that = (ClassNode) o;
+        ClassNode that = (ClassNode) o;
 
-		return fqcn.equals(that.fqcn);
-	}
+        return fqcn.equals(that.fqcn);
+    }
 
-	@Override
-	public int hashCode() {
-		return fqcn.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return fqcn.hashCode();
+    }
 
-	@Override
-	public String toString() {
-		return fqcn;
-	}
+    @Override
+    public String toString() {
+        return fqcn;
+    }
 }
