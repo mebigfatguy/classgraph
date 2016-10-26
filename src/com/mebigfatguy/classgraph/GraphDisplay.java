@@ -295,7 +295,7 @@ public class GraphDisplay {
                     textRenderer.begin3DRendering();
                     textRenderer.setColor(1.0f, 0.5f, 0.2f, 1.0f);
 
-                    textRenderer.draw3D(node.getFQCN(), pos[0] + 20.0f, pos[1], pos[2], 1.0f);
+                    textRenderer.draw3D(node.getSimpleName(), pos[0] + 20.0f, pos[1], pos[2], 1.0f);
                 } finally {
                     textRenderer.end3DRendering();
                 }

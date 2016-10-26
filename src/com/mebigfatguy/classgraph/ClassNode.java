@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClassNode {
 
     private String fqcn;
+    private String simpleName;
     private ClassType clsType;
     private float[] position = { 0.0f, 0.0f, 0.0f };
 
@@ -31,6 +32,12 @@ public class ClassNode {
 
     public ClassNode(String className, ClassType classType) {
         fqcn = className;
+        int dotPos = className.lastIndexOf('.');
+        if (dotPos >= 0) {
+            simpleName = className.substring(dotPos + 1);
+        } else {
+            simpleName = className;
+        }
         clsType = classType;
     }
 
@@ -50,6 +57,10 @@ public class ClassNode {
 
     public String getFQCN() {
         return fqcn;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
     }
 
     public ClassType getType() {
