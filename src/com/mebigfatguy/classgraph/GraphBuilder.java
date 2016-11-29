@@ -41,27 +41,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GraphBuilder {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(GraphBuilder.class);
-	
-	private static final FileFilter CLASS_FILTER = new FileFilter() {
-		@Override
-		public boolean accept(File path) {
-			if (path.isDirectory()) {
-				return true;
-			}
-			
-			return path.getPath().endsWith(".class");
-		}
-	};
-	
-	private ExecutorService executor;
-	private Set<File> classPath;
-	private ClassNodes nodes;
-	
-	public GraphBuilder(final Set<File> clsPath) {
-        
-	    ClassFinderLoader loader = AccessController.<ClassFinderLoader>doPrivileged(new PrivilegedAction<ClassFinderLoader>() {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphBuilder.class);
+
+    private static final FileFilter CLASS_FILTER = new FileFilter() {
+        @Override
+        public boolean accept(File path) {
+            if (path.isDirectory()) {
+                return true;
+            }
+
+            return path.getPath().endsWith(".class");
+        }
+    };
+
+    private ExecutorService executor;
+    private Set<File> classPath;
+    private ClassNodes nodes;
+
+    public GraphBuilder(final Set<File> clsPath) {
+
+        ClassFinderLoader loader = AccessController.<ClassFinderLoader> doPrivileged(new PrivilegedAction<ClassFinderLoader>() {
             @Override
             public ClassFinderLoader run() {
                 try {
@@ -70,114 +70,116 @@ public class GraphBuilder {
                     throw new IllegalArgumentException("Invalid url " + clsPath, e);
                 }
             }
-	    });
-	    
-	    nodes = new ClassNodes(loader);
-	    
-	    executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
-		classPath = clsPath;
-	}
-	
-	public void build() {
-		for (final File f : classPath) {
-		    executor.submit(new Runnable() {
-		    	@Override
-		        public void run() {
-		        	if (f.isFile())
-		        		parseJar(f);
-		        	else
-		        		parseDirectory(f);
-		        }
-		    });
-		}
-	}
-	
-	public void terminate() {
-		executor.shutdownNow();
-	}
-	
-	public ClassNodes getNodes() {
-	    return nodes;
-	}
-	
-	private void parseJar(File f) {
-	    try {
-    		ZipEntry ze = null;
-    		try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
-    		    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
-    		    
-    			while ((ze = jis.getNextEntry()) != null) {
-    			    final String clsName = ze.getName();
-    				if (clsName.endsWith(".class")) {
-    				    LOGGER.info("Parsing class {}", clsName);
-    				    
-    				    Thread.sleep(100);
-    					try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
+        });
+
+        nodes = new ClassNodes(loader);
+
+        executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
+        classPath = clsPath;
+    }
+
+    public void build() {
+        for (final File f : classPath) {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    if (f.isFile()) {
+                        parseJar(f);
+                    } else {
+                        parseDirectory(f);
+                    }
+                }
+            });
+        }
+    }
+
+    public void terminate() {
+        executor.shutdownNow();
+    }
+
+    public ClassNodes getNodes() {
+        return nodes;
+    }
+
+    private void parseJar(File f) {
+        try {
+            ZipEntry ze = null;
+            try (JarInputStream jis = new JarInputStream(new BufferedInputStream(new FileInputStream(f)))) {
+                ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
+
+                while ((ze = jis.getNextEntry()) != null) {
+                    final String clsName = ze.getName();
+                    if (clsName.endsWith(".class")) {
+                        LOGGER.info("Parsing class {}", clsName);
+
+                        Thread.sleep(100);
+                        try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
                             ClassReader cr = new ClassReader(is);
-                            cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
-    					}
-    				}
-    			}
-    		} catch (IOException e) {
-    			LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
-    		}
-	    } catch (InterruptedException ie) {  
-	    }
-	}
-	
-	private void parseDirectory(File d) {
-	    ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
-	    List<File> stack = new ArrayList<File>();
-	    stack.add(d);
-	    
-	    while (!stack.isEmpty()) {
-	    	File f = stack.remove(stack.size() - 1);
-			if (f.isDirectory()) {
-				File[] children = f.listFiles(CLASS_FILTER);
-				for (File c : children) {
-					stack.add(c);
-				}
-			} else {
-				try (final InputStream is = new BufferedInputStream(new FileInputStream(f))) {
+                            cr.accept(visitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("Failed parsing zip entry {} from file {}", ze, f, e);
+            }
+        } catch (InterruptedException ie) {
+            LOGGER.info("Jar {} Parsing interrupted", f);
+        }
+    }
+
+    private void parseDirectory(File d) {
+        ClassGraphBuildingVisitor visitor = new ClassGraphBuildingVisitor(nodes);
+        List<File> stack = new ArrayList<>();
+        stack.add(d);
+
+        while (!stack.isEmpty()) {
+            File f = stack.remove(stack.size() - 1);
+            if (f.isDirectory()) {
+                File[] children = f.listFiles(CLASS_FILTER);
+                for (File c : children) {
+                    stack.add(c);
+                }
+            } else {
+                try (final InputStream is = new BufferedInputStream(new FileInputStream(f))) {
                     ClassReader cr = new ClassReader(is);
-                    cr.accept(visitor, ClassReader.SKIP_DEBUG|ClassReader.SKIP_FRAMES);
-	    		} catch (IOException e) {
-	    			LOGGER.error("Failed parsing class file {}", f, e);
-	    		}
-			}
-	    }
-	}
-	
-	private static class ClassFinderLoader extends URLClassLoader implements ClassFinder {
-	    
-	    public ClassFinderLoader(Set<File> clsPath) throws MalformedURLException {
-	        super(toURLs(clsPath));
-	    }
-	    
-	    private static URL[] toURLs(Set<File> clsPath) throws MalformedURLException {
-	        List<URL> urls = new ArrayList<URL>(clsPath.size());
-	        
-	        for (File path : clsPath) {
-	            urls.add(path.toURI().toURL());
-	        }
-	        
-	        return urls.toArray(new URL[urls.size()]);
-	    }
+                    cr.accept(visitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+                } catch (IOException e) {
+                    LOGGER.error("Failed parsing class file {}", f, e);
+                }
+            }
+        }
+    }
+
+    private static class ClassFinderLoader extends URLClassLoader implements ClassFinder {
+
+        public ClassFinderLoader(Set<File> clsPath) throws MalformedURLException {
+            super(toURLs(clsPath));
+        }
+
+        private static URL[] toURLs(Set<File> clsPath) throws MalformedURLException {
+            List<URL> urls = new ArrayList<>(clsPath.size());
+
+            for (File path : clsPath) {
+                urls.add(path.toURI().toURL());
+            }
+
+            return urls.toArray(new URL[urls.size()]);
+        }
 
         @Override
         public ClassType classStatus(String clsName) {
             if (clsName.startsWith("java.") || clsName.startsWith("javax.")) {
                 return (clsName.equals("java.lang.Object")) ? ClassType.OBJECT_CLASS : ClassType.SYSTEM_CLASS;
             }
-            
-            String clsResourceName = clsName.replaceAll("\\.",  "/") + ".class";
-            
+
+            String clsResourceName = clsName.replaceAll("\\.", "/") + ".class";
+
             URL u = getResource(clsResourceName);
             if (u != null) {
                 return ClassType.APPLICATION_CLASS;
             }
-            
+
             return ClassType.UNKNOWN_CLASS;
         }
-	}
+    }
 }

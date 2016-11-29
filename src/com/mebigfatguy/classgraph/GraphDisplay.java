@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
 import com.jogamp.newt.Screen;
@@ -49,6 +52,8 @@ import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class GraphDisplay {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphDisplay.class);
 
     private static final int FONT_SIZE = 6;
 
@@ -425,6 +430,7 @@ public class GraphDisplay {
                     updateNodes();
                 }
             } catch (InterruptedException ie) {
+                LOGGER.error("Modifier thread interrupted");
             }
         }
     }
