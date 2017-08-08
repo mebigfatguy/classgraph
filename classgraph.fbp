@@ -1,10 +1,9 @@
 <Project projectName="classgraph">
-  <Jar>./target/classes</Jar>
-  <AuxClasspathEntry>./lib/asm-5.0.3.jar</AuxClasspathEntry>
-  <AuxClasspathEntry>./lib/gluegen-rt-2.2.4.jar</AuxClasspathEntry>
-  <AuxClasspathEntry>./lib/jogl-all-2.2.4.jar</AuxClasspathEntry>
-  <AuxClasspathEntry>./lib/logback-classic-1.1.2.jar</AuxClasspathEntry>
-  <AuxClasspathEntry>./lib/logback-core-1.1.2.jar</AuxClasspathEntry>
-  <AuxClasspathEntry>./lib/slf4j-api-1.7.7.jar</AuxClasspathEntry>
-  <SrcDir>./src</SrcDir>
+  <Jar>././target/classes</Jar>
+  <AuxClasspathEntry>./lib/asm-5.1.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>./lib/gluegen-rt-2.3.2.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>./lib/jogl-all-2.3.2.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>./lib/logback-classic-1.1.7.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>./lib/slf4j-api-1.7.21.jar</AuxClasspathEntry>
+  <SrcDir>././src</SrcDir>
 </Project>
