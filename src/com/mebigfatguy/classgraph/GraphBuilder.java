@@ -136,8 +136,10 @@ public class GraphBuilder {
             File f = stack.remove(stack.size() - 1);
             if (f.isDirectory()) {
                 File[] children = f.listFiles(CLASS_FILTER);
-                for (File c : children) {
-                    stack.add(c);
+                if (children != null) {
+                    for (File c : children) {
+                        stack.add(c);
+                    }
                 }
             } else {
                 try (final InputStream is = new BufferedInputStream(new FileInputStream(f))) {
