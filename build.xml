@@ -9,12 +9,12 @@
 	<property name="classes.dir" value="${target.dir}/classes" />
     <property name="lib.dir" value="${basedir}/lib" />
     <property name="conf.dir" value="${basedir}/conf" />
-	<property name="javac.source" value="1.7" />
-	<property name="javac.target" value="1.7" />
+	<property name="javac.source" value="17" />
+	<property name="javac.target" value="17" />
 	<property name="javac.deprecation" value="on" />
 	<property name="javac.debug" value="on" />
 	<property name="proxy.server" value="" />
-	<property name="classgraph.version" value="0.1.0" />
+	<property name="classgraph.version" value="0.3.0" />
 
 	<path id="classgraph.classpath">
         <pathelement location="${classes.dir}"/>
@@ -25,16 +25,12 @@
         <pathelement location="${lib.dir}/logback-classic-${logback-classic.version}.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-linux-amd64.jar"/>
-        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-linux-i586.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-macosx-universal.jar"/>
         <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-windows-amd64.jar"/>
-        <pathelement location="${lib.dir}/jogl-all-${jogl-all.version}-natives-windows-i586.jar"/>
         <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}.jar"/>
         <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-amd64.jar"/>
-        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-linux-i586.jar"/>
         <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-macosx-universal.jar"/>
         <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-windows-amd64.jar"/>
-        <pathelement location="${lib.dir}/gluegen-rt-${gluegen-rt.version}-natives-windows-i586.jar"/>
 	</path>
 	
     <target name="info">
@@ -48,7 +44,7 @@
 	<target name="yank" unless="no.yank" xmlns:yank="antlib:com.mebigfatguy.yank">
 		<mkdir dir="${lib.dir}"/>
 		<yank:yank yankFile="${basedir}/yank.xls" destination="${lib.dir}" proxyServer="${proxy.server}" source="true">
-			<server url="http://repo1.maven.org/maven2"/>
+			<server url="https://repo1.maven.org/maven2"/>
 			<generateVersions propertyFileName="${basedir}/version.properties" />
 		</yank:yank>
 	</target>
@@ -93,6 +89,7 @@
 	
 	<target name="run" depends="jar">
 		<java classname="com.mebigfatguy.classgraph.ClassGraph" fork="true" classpathref="classgraph.classpath">
+              <sysproperty key="logback.configurationFile" value="file://${basedir}/conf/logback.xml"/>
 			  <arg value="${target.dir}/classgraph-${classgraph.version}.jar"/>
 		</java>
 	</target>

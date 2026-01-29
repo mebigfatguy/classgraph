@@ -61,21 +61,15 @@ public class GraphBuilder {
 
     public GraphBuilder(final Set<File> clsPath) {
 
-        ClassFinderLoader loader = AccessController.<ClassFinderLoader> doPrivileged(new PrivilegedAction<ClassFinderLoader>() {
-            @Override
-            public ClassFinderLoader run() {
-                try {
-                    return new ClassFinderLoader(clsPath);
-                } catch (MalformedURLException e) {
-                    throw new IllegalArgumentException("Invalid url " + clsPath, e);
-                }
-            }
-        });
+        try {
+            ClassFinderLoader loader = new ClassFinderLoader(clsPath);
+            nodes = new ClassNodes(loader);
 
-        nodes = new ClassNodes(loader);
-
-        executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
-        classPath = clsPath;
+            executor = Executors.newFixedThreadPool(3 * Runtime.getRuntime().availableProcessors());
+            classPath = clsPath;
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid URL while loading classes", e);
+        }
     }
 
     public void build() {
@@ -113,10 +107,8 @@ public class GraphBuilder {
                         LOGGER.info("Parsing class {}", clsName);
 
                         Thread.sleep(100);
-                        try (final InputStream is = new LengthLimitedInputStream(jis, ze.getSize())) {
-                            ClassReader cr = new ClassReader(is);
-                            cr.accept(visitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-                        }
+                        ClassReader cr = new ClassReader(jis);
+                        cr.accept(visitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
                     }
                 }
             } catch (IOException e) {
