@@ -27,7 +27,7 @@ public class ClassGraphBuildingVisitor extends ClassVisitor {
     private String clsName;
 
     public ClassGraphBuildingVisitor(ClassNodes nodes) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM9);
         classNodes = nodes;
     }
 
